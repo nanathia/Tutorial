@@ -1,5 +1,8 @@
 #pragma once
-class SceneBase
+#include "Ref.h"
+
+// シーンのインターフェイスです。
+class SceneBase : public Ref
 {
 public:
 	SceneBase();

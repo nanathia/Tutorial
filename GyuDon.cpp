@@ -1,6 +1,7 @@
 #include "GyuDon.h"
 #include "TGATexture.h"
 #include "DEFINE.h"
+#include "Director.h"
 
 // DirectXŒn‚Ì‰ğ•úƒ}ƒNƒ‚Å‚·B
 #define SAFE_RELEASE(x) if (x){ x->Release(); x; }
@@ -8,7 +9,6 @@
 
 GyuDon::GyuDon()
 {
-	ZeroMemory(this, sizeof(GyuDon));
 	m_vLight = D3DXVECTOR3(0, 0.5, -1);
 	D3DXVec3Normalize(&m_vLight, &m_vLight);
 }
@@ -91,6 +91,7 @@ void GyuDon::Loop()
 
 void GyuDon::App()
 {
+	Director::instance()->autoReleasePool()->update();
 	Render();
 }
 

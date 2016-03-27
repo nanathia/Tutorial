@@ -9,6 +9,7 @@
 #include <D3DX11.h>
 #include <D3Dcompiler.h>
 #include "lib/MikuMikuFormats//Pmx.h"
+#include "Ref.h"
 
 #pragma comment(lib,"winmm.lib")
 #pragma comment(lib,"d3dx10.lib")
@@ -39,7 +40,7 @@ struct SIMPLESHADER_CONSTANT_BUFFER
 	D3DXVECTOR4 vEye;
 };
 
-class GyuDon
+class GyuDon : public Ref
 {
 
 
@@ -58,26 +59,27 @@ public:
 	void App();
 	void Render();
 	void DestroyD3D();
-	HWND m_hWnd;
-	ID3D11Device* m_pDevice;
-	ID3D11DeviceContext* m_pDeviceContext;
-	IDXGISwapChain* m_pSwapChain;
-	ID3D11RenderTargetView* m_pRenderTargetView;
-	ID3D11DepthStencilView* m_pDepthStencilView;
-	ID3D11Texture2D* m_pDepthStencil;
+
+	HWND m_hWnd = NULL;
+	ID3D11Device* m_pDevice = NULL;
+	ID3D11DeviceContext* m_pDeviceContext = NULL;
+	IDXGISwapChain* m_pSwapChain = NULL;
+	ID3D11RenderTargetView* m_pRenderTargetView = NULL;
+	ID3D11DepthStencilView* m_pDepthStencilView = NULL;
+	ID3D11Texture2D* m_pDepthStencil = NULL;
 	D3DXVECTOR3 m_vLight;
 
-	ID3D11InputLayout* m_pVertexLayout;
-	ID3D11VertexShader* m_pVertexShader;
-	ID3D11PixelShader* m_pPixelShader;
-	ID3D11Buffer* m_pConstantBuffer;
-	ID3D11Buffer* m_pVertexBuffer;
-	ID3D11Buffer* m_pIndexBuffer;
-	ID3D11SamplerState* m_pSamplerState;
-	ID3D11ShaderResourceView** m_pTexture;
+	ID3D11InputLayout* m_pVertexLayout = NULL;
+	ID3D11VertexShader* m_pVertexShader = NULL;
+	ID3D11PixelShader* m_pPixelShader = NULL;
+	ID3D11Buffer* m_pConstantBuffer = NULL;
+	ID3D11Buffer* m_pVertexBuffer = NULL;
+	ID3D11Buffer* m_pIndexBuffer = NULL;
+	ID3D11SamplerState* m_pSamplerState = NULL;
+	ID3D11ShaderResourceView** m_pTexture = NULL;
 
 
-	ID3D11Buffer* m_pVertexBufferTest;
+	ID3D11Buffer* m_pVertexBufferTest = NULL;
 
 	pmx::PmxModel m_model;
 };
