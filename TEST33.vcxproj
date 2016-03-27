@@ -86,19 +86,35 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CONSTANT.h" />
+    <ClInclude Include="ApiMiku.h" />
+    <ClInclude Include="AutoReleasePool.h" />
+    <ClInclude Include="DEFINE.h" />
+    <ClInclude Include="Director.h" />
     <ClInclude Include="GyuDon.h" />
     <ClInclude Include="lib\MikuMikuFormats\EncodingHelper.h" />
     <ClInclude Include="lib\MikuMikuFormats\Pmd.h" />
     <ClInclude Include="lib\MikuMikuFormats\Pmx.h" />
     <ClInclude Include="lib\MikuMikuFormats\Vmd.h" />
-    <ClInclude Include="MAIN.h" />
+    <ClInclude Include="Oniko.h" />
+    <ClInclude Include="PlayScene.h" />
+    <ClInclude Include="PMXModel.h" />
+    <ClInclude Include="Ref.h" />
+    <ClInclude Include="SceneBase.h" />
     <ClInclude Include="TGATexture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ApiMiku.cpp" />
+    <ClCompile Include="AutoReleasePool.cpp" />
+    <ClCompile Include="DEFINE.cpp" />
+    <ClCompile Include="Director.cpp" />
     <ClCompile Include="GyuDon.cpp" />
     <ClCompile Include="lib\MikuMikuFormats\Pmx.cpp" />
     <ClCompile Include="MAIN.cpp" />
+    <ClCompile Include="Oniko.cpp" />
+    <ClCompile Include="PlayScene.cpp" />
+    <ClCompile Include="PMXModel.cpp" />
+    <ClCompile Include="Ref.cpp" />
+    <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="TGATexture.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

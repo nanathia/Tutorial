@@ -19,9 +19,6 @@
     <FxCompile Include="PhongShade.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MAIN.h">
-      <Filter>framework</Filter>
-    </ClInclude>
     <ClInclude Include="lib\MikuMikuFormats\EncodingHelper.h">
       <Filter>pmxParsor</Filter>
     </ClInclude>
@@ -34,9 +31,17 @@
     <ClInclude Include="lib\MikuMikuFormats\Vmd.h">
       <Filter>pmxParsor</Filter>
     </ClInclude>
-    <ClInclude Include="CONSTANT.h" />
     <ClInclude Include="TGATexture.h" />
     <ClInclude Include="GyuDon.h" />
+    <ClInclude Include="SceneBase.h" />
+    <ClInclude Include="PlayScene.h" />
+    <ClInclude Include="ApiMiku.h" />
+    <ClInclude Include="Oniko.h" />
+    <ClInclude Include="Ref.h" />
+    <ClInclude Include="AutoReleasePool.h" />
+    <ClInclude Include="Director.h" />
+    <ClInclude Include="PMXModel.h" />
+    <ClInclude Include="DEFINE.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MAIN.cpp">
@@ -47,5 +52,14 @@
     </ClCompile>
     <ClCompile Include="TGATexture.cpp" />
     <ClCompile Include="GyuDon.cpp" />
+    <ClCompile Include="SceneBase.cpp" />
+    <ClCompile Include="PlayScene.cpp" />
+    <ClCompile Include="ApiMiku.cpp" />
+    <ClCompile Include="Oniko.cpp" />
+    <ClCompile Include="Ref.cpp" />
+    <ClCompile Include="AutoReleasePool.cpp" />
+    <ClCompile Include="Director.cpp" />
+    <ClCompile Include="PMXModel.cpp" />
+    <ClCompile Include="DEFINE.cpp" />
   </ItemGroup>
 </Project>
