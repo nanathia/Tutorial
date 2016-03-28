@@ -16,9 +16,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="PhongShade.hlsl" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="lib\MikuMikuFormats\EncodingHelper.h">
       <Filter>pmxParsor</Filter>
     </ClInclude>
@@ -63,5 +60,9 @@
     <ClCompile Include="PMXModel.cpp" />
     <ClCompile Include="DEFINE.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="pmxVertex.hlsl" />
+    <FxCompile Include="pmxPixel.hlsl" />
   </ItemGroup>
 </Project>

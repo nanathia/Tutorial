@@ -4,6 +4,9 @@ cbuffer global
 	matrix g_mWVP;
 	float4 g_vLightDir;
 	float4 g_Diffuse = float4(1, 0, 0, 0);
+	float4 g_vAmbient;
+	float4 g_vSpecular;
+	float4 g_Specularlity;
 	float4 g_vEye;
 };
 
@@ -31,22 +34,4 @@ VS_OUTPUT VS(float4 Pos : POSITION, float4 Normal : NORMAL, float2 UV : TEXCOORD
 	output.UV = UV;
 
 	return output;
-}
-
-Texture2D g_texDecal : register(t0);
-SamplerState g_samLinear : register(s0);
-
-float4 PS(VS_OUTPUT input) : SV_Target
-{
-	float3 Normal = normalize(input.Normal);
-	float3 LightDir = normalize(input.Light);
-	float3 ViewDir = normalize(input.EyeVector);
-	float4 NL = saturate(dot(Normal, LightDir));
-
-	float3 Reflect = normalize(2 * NL * Normal - LightDir);
-	float4 specular = 2 * pow(saturate(dot(Reflect, ViewDir)), 8);
-
-	//input.UV[1] = 1.0 - input.UV[1];
-
-	return g_texDecal.Sample(g_samLinear, input.UV)/*float4(1.0, 0.4, 1.0, 1.0)*//* * NL + specular*/;
 }

@@ -44,12 +44,15 @@ namespace{
 		D3DXVECTOR3 Normal;
 		float Tex[2];
 	};
-	struct SIMPLESHADER_CONSTANT_BUFFER
+	struct PMX_CONSTANT_BUFFER
 	{
 		D3DXMATRIX mW;
 		D3DXMATRIX mWVP;
 		D3DXVECTOR4 vLightDir;
-		D3DXVECTOR4 vColor;
+		D3DXVECTOR4 vDiffuse;
+		D3DXVECTOR4 vAmbient;
+		D3DXVECTOR4 vSpecular;
+		D3DXVECTOR4 vSpecularlity;
 		D3DXVECTOR4 vEye;
 	};
 
@@ -57,7 +60,6 @@ namespace{
 
 
 void PMXModel::draw(){
-
 	ID3D11Device* device = Director::instance()->framework()->device();
 	ID3D11DeviceContext* deviceContext = Director::instance()->framework()->deviceContext();
 	const D3DXMATRIX& projMat = Director::instance()->framework()->projMat();
@@ -69,27 +71,15 @@ void PMXModel::draw(){
 
 	deviceContext->VSSetShader(m_pVertexShader, NULL, 0);
 	deviceContext->PSSetShader(m_pPixelShader, NULL, 0);
-	D3D11_MAPPED_SUBRESOURCE pData;
-	SIMPLESHADER_CONSTANT_BUFFER cb;
-	if (SUCCEEDED(deviceContext->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData)))
-	{
-		cb.mW = mWorld;
-		D3DXMatrixTranspose(&cb.mW, &cb.mW);
-		D3DMATRIX m = mWorld*viewMat*projMat;
-		cb.mWVP = m;
-		D3DXMatrixTranspose(&cb.mWVP, &cb.mWVP);
-		D3DXVECTOR4 vColor(1, 0, 0, 1);
-		cb.vColor = vColor;
-		cb.vLightDir = (D3DXVECTOR4)m_vLight;
-		cb.vEye = D3DXVECTOR4(vEyePt.x, vEyePt.y, vEyePt.z, 0.0f);
 
-		memcpy_s(pData.pData, pData.RowPitch, (void*)&cb, sizeof(SIMPLESHADER_CONSTANT_BUFFER));
-		deviceContext->Unmap(m_pConstantBuffer, 0);
-	}
-	deviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-	deviceContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 	deviceContext->IASetInputLayout(m_pVertexLayout);
 	deviceContext->PSSetSamplers(0, 1, &m_pSamplerState);
+
+
+	std::wstring test[100];
+	for (int i = 0; i < m_model.texture_count; i++){
+		test[i] = m_model.textures[i];
+	}
 
 	{
 		// 2016-03-27 pmx 描画
@@ -105,6 +95,46 @@ void PMXModel::draw(){
 				index += m_model.materials[i].index_count;
 				continue;
 			}
+
+			// 2016-03-29 コンスタント数値詳細適用テスト
+			D3D11_MAPPED_SUBRESOURCE pData;
+			PMX_CONSTANT_BUFFER cb;
+
+
+			if (SUCCEEDED(deviceContext->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData)))
+			{
+				pmx::PmxMaterial& material = m_model.materials[i];
+				std::wstring name = m_model.textures[2];
+				cb.mW = mWorld;
+				D3DXMatrixTranspose(&cb.mW, &cb.mW);
+				D3DMATRIX m = mWorld*viewMat*projMat;
+				cb.mWVP = m;
+				D3DXMatrixTranspose(&cb.mWVP, &cb.mWVP);
+				cb.vDiffuse.x = m_model.materials[i].diffuse[0];
+				cb.vDiffuse.y = m_model.materials[i].diffuse[1];
+				cb.vDiffuse.z = m_model.materials[i].diffuse[2];
+				cb.vDiffuse.w = 1.0f;
+				cb.vAmbient.x = m_model.materials[i].ambient[0];
+				cb.vAmbient.y = m_model.materials[i].ambient[1];
+				cb.vAmbient.z = m_model.materials[i].ambient[2];
+				cb.vAmbient.w = 1.0f;
+				cb.vSpecular.x = m_model.materials[i].specular[0];
+				cb.vSpecular.y = m_model.materials[i].specular[1];
+				cb.vSpecular.z = m_model.materials[i].specular[2];
+				cb.vSpecular.w = 1.0f;
+				cb.vSpecularlity[0] = m_model.materials[i].specularlity;
+				if (material.diffuse_texture_index == 3){
+					int jjj = 0;
+				}
+				cb.vLightDir = (D3DXVECTOR4)m_vLight;
+				cb.vEye = D3DXVECTOR4(vEyePt.x, vEyePt.y, vEyePt.z, 0.0f);
+
+				memcpy_s(pData.pData, pData.RowPitch, (void*)&cb, sizeof(PMX_CONSTANT_BUFFER));
+				deviceContext->Unmap(m_pConstantBuffer, 0);
+			}
+
+			deviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+			deviceContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 			deviceContext->PSSetShaderResources(0, 1, &m_pTexture[m_model.materials[i].diffuse_texture_index]);
 			deviceContext->DrawIndexed(m_model.materials[i].index_count, index, 0);
 			index += m_model.materials[i].index_count;
@@ -121,7 +151,7 @@ HRESULT PMXModel::initShader(){
 	ID3DBlob *pCompiledShader = NULL;
 	ID3DBlob *pErrors = NULL;
 
-	if (FAILED(D3DX11CompileFromFile("PhongShade.hlsl", NULL, NULL, "VS", "vs_5_0", 0, 0, NULL, &pCompiledShader, &pErrors, NULL)))
+	if (FAILED(D3DX11CompileFromFile("pmxVertex.hlsl", NULL, NULL, "VS", "vs_5_0", 0, 0, NULL, &pCompiledShader, &pErrors, NULL)))
 	{
 		MessageBox(0, "hlsl読み込み失敗", NULL, MB_OK);
 		return E_FAIL;
@@ -148,7 +178,7 @@ HRESULT PMXModel::initShader(){
 		return E_FAIL;
 	}
 
-	if (FAILED(D3DX11CompileFromFile("PhongShade.hlsl", NULL, NULL, "PS", "ps_5_0", 0, 0, NULL, &pCompiledShader, &pErrors, NULL)))
+	if (FAILED(D3DX11CompileFromFile("pmxPixel.hlsl", NULL, NULL, "PS", "ps_5_0", 0, 0, NULL, &pCompiledShader, &pErrors, NULL)))
 	{
 		MessageBox(0, "hlsl読み込み失敗", NULL, MB_OK);
 		return E_FAIL;
@@ -165,13 +195,14 @@ HRESULT PMXModel::initShader(){
 	SAFE_RELEASE(pCompiledShader);
 	D3D11_BUFFER_DESC cb;
 	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cb.ByteWidth = sizeof(SIMPLESHADER_CONSTANT_BUFFER);
+	cb.ByteWidth = sizeof(PMX_CONSTANT_BUFFER);
 	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	cb.MiscFlags = 0;
 	cb.StructureByteStride = 0;
 	cb.Usage = D3D11_USAGE_DYNAMIC;
 
-	if (FAILED(device->CreateBuffer(&cb, NULL, &m_pConstantBuffer)))
+	HRESULT hr;
+	if (FAILED(hr = device->CreateBuffer(&cb, NULL, &m_pConstantBuffer)))
 	{
 		return E_FAIL;
 	}
