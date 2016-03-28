@@ -2,6 +2,7 @@
 #include "TGATexture.h"
 #include "Director.h"
 #include "GyuDon.h"
+#include "SceneManager.h"
 #include <D3DX11.h>
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -15,6 +16,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, INT)
 		{
 			if (SUCCEEDED(Director::instance()->framework()->InitD3D()))
 			{
+				Director::instance()->scene()->initScene();
 				Director::instance()->framework()->Loop();
 			}
 		}

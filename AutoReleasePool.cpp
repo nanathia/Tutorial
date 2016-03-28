@@ -10,14 +10,23 @@ AutoReleasePool::AutoReleasePool()
 
 AutoReleasePool::~AutoReleasePool()
 {
-	auto it = m_objectList.begin();
-	while (it != m_objectList.end())
-	{
-		ASSERT ((*it)->refCount() == 1 && "オブジェクトが開放しきれていません");
-		SAFE_DELETE(*it);
-		it++;
+	for (int i = 0; i < 100; i++){
+		// 1000回試行する。
+		auto it = m_objectList.begin();
+		while (it != m_objectList.end())
+		{
+			if ((*it)->refCount() == 1){
+				SAFE_DELETE(*it);
+				it = m_objectList.erase(it);
+				continue;
+			}
+			it++;
+		}
+		if (m_objectList.empty()){
+			break;
+		}
 	}
-	m_objectList.clear();
+	ASSERT(m_objectList.empty() && "オブジェクトが解放しきれていません");
 }
 
 

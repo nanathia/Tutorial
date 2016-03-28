@@ -25,21 +25,6 @@
 
 
 
-struct SimpleVertex
-{
-	D3DXVECTOR3 Pos;
-	D3DXVECTOR3 Normal;
-	float Tex[2];
-};
-struct SIMPLESHADER_CONSTANT_BUFFER
-{
-	D3DXMATRIX mW;
-	D3DXMATRIX mWVP;
-	D3DXVECTOR4 vLightDir;
-	D3DXVECTOR4 vColor;
-	D3DXVECTOR4 vEye;
-};
-
 class GyuDon : public Ref
 {
 
@@ -60,6 +45,18 @@ public:
 	void Render();
 	void DestroyD3D();
 
+public:
+	const D3DXMATRIX& viewMat();
+	const D3DXMATRIX& projMat();
+
+	const D3DXVECTOR3& vEyePt();
+	const D3DXVECTOR3& vLookatPt();
+	const D3DXVECTOR3& vUpVec();
+
+	ID3D11Device* device();
+	ID3D11DeviceContext* deviceContext();
+
+private:
 	HWND m_hWnd = NULL;
 	ID3D11Device* m_pDevice = NULL;
 	ID3D11DeviceContext* m_pDeviceContext = NULL;
@@ -67,20 +64,12 @@ public:
 	ID3D11RenderTargetView* m_pRenderTargetView = NULL;
 	ID3D11DepthStencilView* m_pDepthStencilView = NULL;
 	ID3D11Texture2D* m_pDepthStencil = NULL;
-	D3DXVECTOR3 m_vLight;
 
-	ID3D11InputLayout* m_pVertexLayout = NULL;
-	ID3D11VertexShader* m_pVertexShader = NULL;
-	ID3D11PixelShader* m_pPixelShader = NULL;
-	ID3D11Buffer* m_pConstantBuffer = NULL;
-	ID3D11Buffer* m_pVertexBuffer = NULL;
-	ID3D11Buffer* m_pIndexBuffer = NULL;
-	ID3D11SamplerState* m_pSamplerState = NULL;
-	ID3D11ShaderResourceView** m_pTexture = NULL;
+	D3DXMATRIX m_projMat;
+	D3DXMATRIX m_viewMat;
 
-
-	ID3D11Buffer* m_pVertexBufferTest = NULL;
-
-	pmx::PmxModel m_model;
+	D3DXVECTOR3 m_vEyePt;
+	D3DXVECTOR3 m_vLookatPt;
+	D3DXVECTOR3 m_vUpVec;
 };
 

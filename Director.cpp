@@ -3,6 +3,8 @@
 #include "DEFINE.h"
 #include "AutoReleasePool.h"
 #include "SceneBase.h"
+#include "SceneManager.h"
+#include "PlayScene.h"
 
 Director* Director::m_instance = 0;
 
@@ -27,12 +29,18 @@ void Director::create(){
 	m_instance->m_framework = new GyuDon;
 	m_instance->m_framework->autoRelease();
 	m_instance->m_framework->retain();
+
+	m_instance->m_scene = new SceneManager();
+	m_instance->m_scene->autoRelease();
+	m_instance->m_scene->retain();
+
 }
 
 void Director::destroy(){
 	ASSERT(m_instance && "Directorがありませんが削除しようとしました。");
 
 	m_instance->m_framework->release();
+	m_instance->m_scene->release();
 
 	SAFE_DELETE(m_instance);
 }
@@ -51,11 +59,7 @@ GyuDon* Director::framework(){
 AutoReleasePool* Director::autoReleasePool(){
 	return m_autoRelease;
 }
-// 現在シーン
-SceneBase* Director::currentScene(){
-	return m_currentScene;
-}
-// 次シーン
-SceneBase* Director::nextScene(){
-	return m_nextScene;
+// シーン管理
+SceneManager* Director::scene(){
+	return m_scene;
 }

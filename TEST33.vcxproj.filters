@@ -42,6 +42,7 @@
     <ClInclude Include="Director.h" />
     <ClInclude Include="PMXModel.h" />
     <ClInclude Include="DEFINE.h" />
+    <ClInclude Include="SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MAIN.cpp">
@@ -61,5 +62,6 @@
     <ClCompile Include="Director.cpp" />
     <ClCompile Include="PMXModel.cpp" />
     <ClCompile Include="DEFINE.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
   </ItemGroup>
 </Project>

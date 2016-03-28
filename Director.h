@@ -5,6 +5,7 @@
 class GyuDon;
 class SceneBase;
 class AutoReleasePool;
+class SceneManager;
 
 class Director
 {
@@ -26,10 +27,8 @@ private:
 	GyuDon* m_framework = 0;
 	// 解放管理
 	AutoReleasePool* m_autoRelease = 0;
-	// 現在シーン
-	SceneBase* m_currentScene = 0;
-	// 次シーン
-	SceneBase* m_nextScene = 0;
+	// シーン管理
+	SceneManager* m_scene = 0;
 
 // インスタンス取得
 public:
@@ -37,13 +36,10 @@ public:
 	GyuDon* framework();
 	// 解放管理
 	AutoReleasePool* autoReleasePool();
-	// 現在シーン
-	SceneBase* currentScene();
-	// 次シーン
-	SceneBase* nextScene();
+	// シーン管理
+	SceneManager* scene();
 
 // その他制御
 public:
-	// 次シーンをセット
-	void changeSceneRequest(SceneBase* next);
+
 };

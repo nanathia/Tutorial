@@ -100,6 +100,7 @@
     <ClInclude Include="PMXModel.h" />
     <ClInclude Include="Ref.h" />
     <ClInclude Include="SceneBase.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="TGATexture.h" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +116,7 @@
     <ClCompile Include="PMXModel.cpp" />
     <ClCompile Include="Ref.cpp" />
     <ClCompile Include="SceneBase.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="TGATexture.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
