@@ -19,8 +19,9 @@ struct VS_OUTPUT
 	float3 EyeVector : CCCC;
 };
 
-
-VS_OUTPUT VS(float4 Pos : POSITION, float4 Normal : NORMAL, float2 UV : TEXCOORD)
+VS_OUTPUT VS(float4 Pos : POSITION,
+	float4 vBoneIndices : POSITION0, float4 vBoneWeights : POSITION1, float vWeitFormula : BLENDWEIGHT,
+	float4 Normal : NORMAL, float2 UV : TEXCOORD)
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
 

@@ -1,23 +1,83 @@
-﻿2016/03/29 8:22:18 にビルドを開始しました。
+﻿2016/03/31 0:49:22 にビルドを開始しました。
      1>ノード 2 上のプロジェクト "C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\TEST33.vcxproj" (Build ターゲット)。
-     1>FxCompile:
-         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\fxc.exe /nologo /E"main" /T fx_5_0 /Fo "C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\Debug\pmxPixel.cso" /Od /Zi pmxPixel.hlsl 
-     1>FXC : warning X4717: Effects deprecated for D3DCompiler_47
-     1>C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\pmxPixel.hlsl(32,29-43): warning X3206: implicit truncation of vector type
-         
-         compilation object save succeeded; see C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\Debug\pmxPixel.cso
-         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\fxc.exe /nologo /E"main" /T fx_5_0 /Fo "C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\Debug\pmxVertex.cso" /Od /Zi pmxVertex.hlsl 
-     1>FXC : warning X4717: Effects deprecated for D3DCompiler_47
-     1>C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\pmxVertex.hlsl(28,18-44): warning X3206: 'mul': implicit truncation of vector type
-     1>C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\pmxVertex.hlsl(29,2-27): warning X3206: implicit truncation of vector type
-     1>C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\pmxVertex.hlsl(31,9-33): warning X3206: implicit truncation of vector type
-     1>C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\pmxVertex.hlsl(32,21-37): warning X3206: implicit truncation of vector type
-         
-         compilation object save succeeded; see C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\Debug\pmxVertex.cso
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt PMXModel.cpp
+         PMXModel.cpp
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(12): warning C4005: 'DXGI_STATUS_OCCLUDED' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50092) : 'DXGI_STATUS_OCCLUDED' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(13): warning C4005: 'DXGI_STATUS_CLIPPED' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50101) : 'DXGI_STATUS_CLIPPED' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(14): warning C4005: 'DXGI_STATUS_NO_REDIRECTION' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50110) : 'DXGI_STATUS_NO_REDIRECTION' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(15): warning C4005: 'DXGI_STATUS_NO_DESKTOP_ACCESS' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50119) : 'DXGI_STATUS_NO_DESKTOP_ACCESS' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(16): warning C4005: 'DXGI_STATUS_GRAPHICS_VIDPN_SOURCE_IN_USE' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50128) : 'DXGI_STATUS_GRAPHICS_VIDPN_SOURCE_IN_USE' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(17): warning C4005: 'DXGI_STATUS_MODE_CHANGED' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50137) : 'DXGI_STATUS_MODE_CHANGED' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(18): warning C4005: 'DXGI_STATUS_MODE_CHANGE_IN_PROGRESS' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50146) : 'DXGI_STATUS_MODE_CHANGE_IN_PROGRESS' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(21): warning C4005: 'DXGI_ERROR_INVALID_CALL' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50161) : 'DXGI_ERROR_INVALID_CALL' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(22): warning C4005: 'DXGI_ERROR_NOT_FOUND' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50170) : 'DXGI_ERROR_NOT_FOUND' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(23): warning C4005: 'DXGI_ERROR_MORE_DATA' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50179) : 'DXGI_ERROR_MORE_DATA' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(24): warning C4005: 'DXGI_ERROR_UNSUPPORTED' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50188) : 'DXGI_ERROR_UNSUPPORTED' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(25): warning C4005: 'DXGI_ERROR_DEVICE_REMOVED' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50197) : 'DXGI_ERROR_DEVICE_REMOVED' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(26): warning C4005: 'DXGI_ERROR_DEVICE_HUNG' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50206) : 'DXGI_ERROR_DEVICE_HUNG' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(27): warning C4005: 'DXGI_ERROR_DEVICE_RESET' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50216) : 'DXGI_ERROR_DEVICE_RESET' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(28): warning C4005: 'DXGI_ERROR_WAS_STILL_DRAWING' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50225) : 'DXGI_ERROR_WAS_STILL_DRAWING' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(29): warning C4005: 'DXGI_ERROR_FRAME_STATISTICS_DISJOINT' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50235) : 'DXGI_ERROR_FRAME_STATISTICS_DISJOINT' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(30): warning C4005: 'DXGI_ERROR_GRAPHICS_VIDPN_SOURCE_IN_USE' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50244) : 'DXGI_ERROR_GRAPHICS_VIDPN_SOURCE_IN_USE' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(31): warning C4005: 'DXGI_ERROR_DRIVER_INTERNAL_ERROR' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50254) : 'DXGI_ERROR_DRIVER_INTERNAL_ERROR' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(32): warning C4005: 'DXGI_ERROR_NONEXCLUSIVE' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50263) : 'DXGI_ERROR_NONEXCLUSIVE' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(33): warning C4005: 'DXGI_ERROR_NOT_CURRENTLY_AVAILABLE' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50272) : 'DXGI_ERROR_NOT_CURRENTLY_AVAILABLE' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(34): warning C4005: 'DXGI_ERROR_REMOTE_CLIENT_DISCONNECTED' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50282) : 'DXGI_ERROR_REMOTE_CLIENT_DISCONNECTED' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(35): warning C4005: 'DXGI_ERROR_REMOTE_OUTOFMEMORY' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50291) : 'DXGI_ERROR_REMOTE_OUTOFMEMORY' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\d3d11.h(917): warning C4005: 'D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50469) : 'D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\d3d11.h(918): warning C4005: 'D3D11_ERROR_FILE_NOT_FOUND' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50478) : 'D3D11_ERROR_FILE_NOT_FOUND' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\d3d11.h(919): warning C4005: 'D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50488) : 'D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\d3d11.h(920): warning C4005: 'D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50497) : 'D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\d3d10.h(608): warning C4005: 'D3D10_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50445) : 'D3D10_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS' の前の定義を確認してください
+     1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\d3d10.h(609): warning C4005: 'D3D10_ERROR_FILE_NOT_FOUND' : マクロが再定義されました。
+                 c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50454) : 'D3D10_ERROR_FILE_NOT_FOUND' の前の定義を確認してください
+     1>c:\users\tpmk9_000\appdata\local\github\tutorialrepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\pmxmodel.cpp(433): warning C4715: 'PMXModel::initTexture' : 値を返さないコントロール パスがあります。
        Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\Debug\TEST33.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\Debug\TEST33.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\Debug\TEST33.lib" /MACHINE:X86 Debug\ApiMiku.obj
+         Debug\AutoReleasePool.obj
+         Debug\DEFINE.obj
+         Debug\Director.obj
+         Debug\GyuDon.obj
+         Debug\Pmx.obj
+         Debug\MAIN.obj
+         Debug\Oniko.obj
+         Debug\PlayScene.obj
+         Debug\PMXModel.obj
+         Debug\Ref.obj
+         Debug\SceneBase.obj
+         Debug\SceneManager.obj
+         Debug\TGATexture.obj
          TEST33.vcxproj -> C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\Debug\TEST33.exe
      1>プロジェクト "C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\TEST33.vcxproj" (Build ターゲット) のビルドが完了しました。
 
 ビルドに成功しました。
 
-経過時間 00:00:00.20
+経過時間 00:00:01.90

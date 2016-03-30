@@ -27,7 +27,8 @@ PMXModel::~PMXModel()
 		SAFE_RELEASE(m_pTexture[i]);
 	}
 	delete[] m_pTexture;
-	SAFE_RELEASE(m_pConstantBuffer);
+	SAFE_RELEASE(m_pVSConstantBuffer);
+	SAFE_RELEASE(m_pPSConstantBuffer);
 	SAFE_RELEASE(m_pVertexShader);
 	SAFE_RELEASE(m_pPixelShader);
 	SAFE_RELEASE(m_pIndexBuffer);
@@ -41,10 +42,13 @@ namespace{
 	struct SimpleVertex
 	{
 		D3DXVECTOR3 Pos;
+		D3DXVECTOR4 vBoneIndices;
+		D3DXVECTOR4 vBoneWeights;
+		float vWeitFormula;
 		D3DXVECTOR3 Normal;
 		float Tex[2];
 	};
-	struct PMX_CONSTANT_BUFFER
+	struct PMX_VS_CONSTANT_BUFFER
 	{
 		D3DXMATRIX mW;
 		D3DXMATRIX mWVP;
@@ -96,45 +100,78 @@ void PMXModel::draw(){
 				continue;
 			}
 
-			// 2016-03-29 コンスタント数値詳細適用テスト
-			D3D11_MAPPED_SUBRESOURCE pData;
-			PMX_CONSTANT_BUFFER cb;
-
-
-			if (SUCCEEDED(deviceContext->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData)))
 			{
-				pmx::PmxMaterial& material = m_model.materials[i];
-				std::wstring name = m_model.textures[2];
-				cb.mW = mWorld;
-				D3DXMatrixTranspose(&cb.mW, &cb.mW);
-				D3DMATRIX m = mWorld*viewMat*projMat;
-				cb.mWVP = m;
-				D3DXMatrixTranspose(&cb.mWVP, &cb.mWVP);
-				cb.vDiffuse.x = m_model.materials[i].diffuse[0];
-				cb.vDiffuse.y = m_model.materials[i].diffuse[1];
-				cb.vDiffuse.z = m_model.materials[i].diffuse[2];
-				cb.vDiffuse.w = 1.0f;
-				cb.vAmbient.x = m_model.materials[i].ambient[0];
-				cb.vAmbient.y = m_model.materials[i].ambient[1];
-				cb.vAmbient.z = m_model.materials[i].ambient[2];
-				cb.vAmbient.w = 1.0f;
-				cb.vSpecular.x = m_model.materials[i].specular[0];
-				cb.vSpecular.y = m_model.materials[i].specular[1];
-				cb.vSpecular.z = m_model.materials[i].specular[2];
-				cb.vSpecular.w = 1.0f;
-				cb.vSpecularlity[0] = m_model.materials[i].specularlity;
-				if (material.diffuse_texture_index == 3){
-					int jjj = 0;
-				}
-				cb.vLightDir = (D3DXVECTOR4)m_vLight;
-				cb.vEye = D3DXVECTOR4(vEyePt.x, vEyePt.y, vEyePt.z, 0.0f);
+				D3D11_MAPPED_SUBRESOURCE pData;
+				PMX_VS_CONSTANT_BUFFER cb;
+				// バーテクス
+				if (SUCCEEDED(deviceContext->Map(m_pVSConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData)))
+				{
+					pmx::PmxMaterial& material = m_model.materials[i];
+					std::wstring name = m_model.textures[2];
+					cb.mW = mWorld;
+					D3DXMatrixTranspose(&cb.mW, &cb.mW);
+					D3DMATRIX m = mWorld*viewMat*projMat;
+					cb.mWVP = m;
+					D3DXMatrixTranspose(&cb.mWVP, &cb.mWVP);
+					cb.vDiffuse.x = m_model.materials[i].diffuse[0];
+					cb.vDiffuse.y = m_model.materials[i].diffuse[1];
+					cb.vDiffuse.z = m_model.materials[i].diffuse[2];
+					cb.vDiffuse.w = 1.0f;
+					cb.vAmbient.x = m_model.materials[i].ambient[0];
+					cb.vAmbient.y = m_model.materials[i].ambient[1];
+					cb.vAmbient.z = m_model.materials[i].ambient[2];
+					cb.vAmbient.w = 1.0f;
+					cb.vSpecular.x = m_model.materials[i].specular[0];
+					cb.vSpecular.y = m_model.materials[i].specular[1];
+					cb.vSpecular.z = m_model.materials[i].specular[2];
+					cb.vSpecular.w = 1.0f;
+					cb.vSpecularlity[0] = m_model.materials[i].specularlity;
+					if (material.diffuse_texture_index == 3){
+						int jjj = 0;
+					}
+					cb.vLightDir = (D3DXVECTOR4)m_vLight;
+					cb.vEye = D3DXVECTOR4(vEyePt.x, vEyePt.y, vEyePt.z, 0.0f);
 
-				memcpy_s(pData.pData, pData.RowPitch, (void*)&cb, sizeof(PMX_CONSTANT_BUFFER));
-				deviceContext->Unmap(m_pConstantBuffer, 0);
+					memcpy_s(pData.pData, pData.RowPitch, (void*)&cb, sizeof(PMX_VS_CONSTANT_BUFFER));
+					deviceContext->Unmap(m_pVSConstantBuffer, 0);
+				}
 			}
 
-			deviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-			deviceContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+			// ピクセル
+			//if (SUCCEEDED(deviceContext->Map(m_pPSConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData)))
+			//{
+			//	pmx::PmxMaterial& material = m_model.materials[i];
+			//	std::wstring name = m_model.textures[2];
+			//	cb.mW = mWorld;
+			//	D3DXMatrixTranspose(&cb.mW, &cb.mW);
+			//	D3DMATRIX m = mWorld*viewMat*projMat;
+			//	cb.mWVP = m;
+			//	D3DXMatrixTranspose(&cb.mWVP, &cb.mWVP);
+			//	cb.vDiffuse.x = m_model.materials[i].diffuse[0];
+			//	cb.vDiffuse.y = m_model.materials[i].diffuse[1];
+			//	cb.vDiffuse.z = m_model.materials[i].diffuse[2];
+			//	cb.vDiffuse.w = 1.0f;
+			//	cb.vAmbient.x = m_model.materials[i].ambient[0];
+			//	cb.vAmbient.y = m_model.materials[i].ambient[1];
+			//	cb.vAmbient.z = m_model.materials[i].ambient[2];
+			//	cb.vAmbient.w = 1.0f;
+			//	cb.vSpecular.x = m_model.materials[i].specular[0];
+			//	cb.vSpecular.y = m_model.materials[i].specular[1];
+			//	cb.vSpecular.z = m_model.materials[i].specular[2];
+			//	cb.vSpecular.w = 1.0f;
+			//	cb.vSpecularlity[0] = m_model.materials[i].specularlity;
+			//	if (material.diffuse_texture_index == 3){
+			//		int jjj = 0;
+			//	}
+			//	cb.vLightDir = (D3DXVECTOR4)m_vLight;
+			//	cb.vEye = D3DXVECTOR4(vEyePt.x, vEyePt.y, vEyePt.z, 0.0f);
+
+			//	memcpy_s(pData.pData, pData.RowPitch, (void*)&cb, sizeof(PMX_PS_CONSTANT_BUFFER));
+			//	deviceContext->Unmap(m_pVSConstantBuffer, 0);
+			//}
+
+			deviceContext->VSSetConstantBuffers(0, 1, &m_pVSConstantBuffer);
+			deviceContext->PSSetConstantBuffers(0, 1, &m_pVSConstantBuffer);
 			deviceContext->PSSetShaderResources(0, 1, &m_pTexture[m_model.materials[i].diffuse_texture_index]);
 			deviceContext->DrawIndexed(m_model.materials[i].index_count, index, 0);
 			index += m_model.materials[i].index_count;
@@ -164,12 +201,15 @@ HRESULT PMXModel::initShader(){
 		MessageBox(0, "バーテックスシェーダー作成失敗", NULL, MB_OK);
 		return E_FAIL;
 	}
-
+	
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDWEIGHT", 0, DXGI_FORMAT_R32_FLOAT, 0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 60, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	UINT numElements = sizeof(layout) / sizeof(layout[0]);
 	if (FAILED(device->CreateInputLayout(layout, numElements,
@@ -191,20 +231,36 @@ HRESULT PMXModel::initShader(){
 		MessageBox(0, "ピクセルシェーダー作成失敗", NULL, MB_OK);
 		return E_FAIL;
 	}
-
 	SAFE_RELEASE(pCompiledShader);
-	D3D11_BUFFER_DESC cb;
-	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cb.ByteWidth = sizeof(PMX_CONSTANT_BUFFER);
-	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cb.MiscFlags = 0;
-	cb.StructureByteStride = 0;
-	cb.Usage = D3D11_USAGE_DYNAMIC;
 
-	HRESULT hr;
-	if (FAILED(hr = device->CreateBuffer(&cb, NULL, &m_pConstantBuffer)))
 	{
-		return E_FAIL;
+		D3D11_BUFFER_DESC cb;
+		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cb.ByteWidth = sizeof(PMX_VS_CONSTANT_BUFFER);
+		cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		cb.MiscFlags = 0;
+		cb.StructureByteStride = 0;
+		cb.Usage = D3D11_USAGE_DYNAMIC;
+		HRESULT hr;
+		if (FAILED(hr = device->CreateBuffer(&cb, NULL, &m_pVSConstantBuffer)))
+		{
+			return E_FAIL;
+		}
+	}
+
+	{
+		D3D11_BUFFER_DESC cb;
+		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cb.ByteWidth = sizeof(PMX_VS_CONSTANT_BUFFER);
+		cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		cb.MiscFlags = 0;
+		cb.StructureByteStride = 0;
+		cb.Usage = D3D11_USAGE_DYNAMIC;
+		HRESULT hr;
+		if (FAILED(hr = device->CreateBuffer(&cb, NULL, &m_pPSConstantBuffer)))
+		{
+			return E_FAIL;
+		}
 	}
 
 	return S_OK;
@@ -230,6 +286,8 @@ HRESULT PMXModel::initPolygon(){
 			vertices[i].Pos.x = m_model.vertices.get()[i].positon[0];
 			vertices[i].Pos.y = m_model.vertices.get()[i].positon[1];
 			vertices[i].Pos.z = m_model.vertices.get()[i].positon[2];
+			//m_model.materials[0].
+			//vertices[i].vBoneIndices.x = m_model.bones[i].
 			vertices[i].Tex[0] = m_model.vertices[i].uv[0];
 			vertices[i].Tex[1] = m_model.vertices[i].uv[1];
 		}
