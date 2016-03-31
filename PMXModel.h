@@ -35,7 +35,7 @@ class PMXModel :
 	ID3D11Buffer* m_pPSConstantBuffer = NULL;
 	ID3D11Buffer* m_pVertexBuffer = NULL;
 	ID3D11Buffer* m_pIndexBuffer = NULL;
-	ID3D11SamplerState* m_pSamplerState = NULL;
+	ID3D11SamplerState* m_pSamplerState[3];
 	ID3D11ShaderResourceView** m_pTexture = NULL;
 
 public:

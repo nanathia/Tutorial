@@ -14,9 +14,7 @@ struct VS_OUTPUT
 {
 	float4 Pos : SV_POSITION;
 	float2 UV : TEXCOORD;
-	float3 Light : AAAA;
 	float3 Normal : BBBB;
-	float3 EyeVector : CCCC;
 };
 
 VS_OUTPUT VS(float4 Pos : POSITION,
@@ -27,10 +25,10 @@ VS_OUTPUT VS(float4 Pos : POSITION,
 
 	output.Pos = mul(Pos, g_mWVP);
 	output.Normal = mul(Normal, (float3x3)g_mW);
-	output.Light = g_vLightDir;
+	//output.Light = g_vLightDir;
 
 	float3 PosWorld = mul(Pos, g_mW);
-	output.EyeVector = g_vEye - PosWorld;
+	//output.EyeVector = g_vEye - PosWorld;
 
 	output.UV = UV;
 

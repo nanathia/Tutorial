@@ -12,7 +12,7 @@
 
 PMXModel::PMXModel(const char* directory, const char* fileName)
 {
-	m_vLight = D3DXVECTOR3(0, 0.5, -1);
+	m_vLight = D3DXVECTOR3(0, -0.5, 0.5);
 	D3DXVec3Normalize(&m_vLight, &m_vLight);
 	initShader();
 	initPolygon();
@@ -22,7 +22,9 @@ PMXModel::PMXModel(const char* directory, const char* fileName)
 
 PMXModel::~PMXModel()
 {
-	SAFE_RELEASE(m_pSamplerState);
+	for (int i = 0; i < 3; i++){
+		SAFE_RELEASE(m_pSamplerState[i]);
+	}
 	for (int i = 0; i < m_model.texture_count; i++){
 		SAFE_RELEASE(m_pTexture[i]);
 	}
@@ -59,6 +61,21 @@ namespace{
 		D3DXVECTOR4 vSpecularlity;
 		D3DXVECTOR4 vEye;
 	};
+	struct PMX_PS_CONSTANT_BUFFER{
+		D3DXVECTOR3 ambient;
+		D3DXVECTOR4 diffuse;
+		D3DXVECTOR3 specular;
+		float shininess;
+
+		D3DXVECTOR3 lightDirection; //direction towards the light
+		D3DXVECTOR3 halfVector; //surface orientation for shiniest spots- the vector stretching from from the camera position to the target
+
+		bool isEdge;
+		D3DXVECTOR4 edgeColor;
+		float edgeSize;
+
+		float fSphereMode; //sphereMode stored as a float
+	};
 
 }
 
@@ -77,8 +94,8 @@ void PMXModel::draw(){
 	deviceContext->PSSetShader(m_pPixelShader, NULL, 0);
 
 	deviceContext->IASetInputLayout(m_pVertexLayout);
-	deviceContext->PSSetSamplers(0, 1, &m_pSamplerState);
-
+	deviceContext->PSSetSamplers(0, 3, m_pSamplerState);
+	
 
 	std::wstring test[100];
 	for (int i = 0; i < m_model.texture_count; i++){
@@ -95,10 +112,6 @@ void PMXModel::draw(){
 		int index = 0;
 		for (int i = 0; i < m_model.material_count; i++)
 		{
-			if (m_model.materials[i].diffuse_texture_index == -1){
-				index += m_model.materials[i].index_count;
-				continue;
-			}
 
 			{
 				D3D11_MAPPED_SUBRESOURCE pData;
@@ -137,42 +150,65 @@ void PMXModel::draw(){
 				}
 			}
 
-			// ピクセル
-			//if (SUCCEEDED(deviceContext->Map(m_pPSConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData)))
-			//{
-			//	pmx::PmxMaterial& material = m_model.materials[i];
-			//	std::wstring name = m_model.textures[2];
-			//	cb.mW = mWorld;
-			//	D3DXMatrixTranspose(&cb.mW, &cb.mW);
-			//	D3DMATRIX m = mWorld*viewMat*projMat;
-			//	cb.mWVP = m;
-			//	D3DXMatrixTranspose(&cb.mWVP, &cb.mWVP);
-			//	cb.vDiffuse.x = m_model.materials[i].diffuse[0];
-			//	cb.vDiffuse.y = m_model.materials[i].diffuse[1];
-			//	cb.vDiffuse.z = m_model.materials[i].diffuse[2];
-			//	cb.vDiffuse.w = 1.0f;
-			//	cb.vAmbient.x = m_model.materials[i].ambient[0];
-			//	cb.vAmbient.y = m_model.materials[i].ambient[1];
-			//	cb.vAmbient.z = m_model.materials[i].ambient[2];
-			//	cb.vAmbient.w = 1.0f;
-			//	cb.vSpecular.x = m_model.materials[i].specular[0];
-			//	cb.vSpecular.y = m_model.materials[i].specular[1];
-			//	cb.vSpecular.z = m_model.materials[i].specular[2];
-			//	cb.vSpecular.w = 1.0f;
-			//	cb.vSpecularlity[0] = m_model.materials[i].specularlity;
-			//	if (material.diffuse_texture_index == 3){
-			//		int jjj = 0;
-			//	}
-			//	cb.vLightDir = (D3DXVECTOR4)m_vLight;
-			//	cb.vEye = D3DXVECTOR4(vEyePt.x, vEyePt.y, vEyePt.z, 0.0f);
+			{
+				D3D11_MAPPED_SUBRESOURCE pData;
+				PMX_PS_CONSTANT_BUFFER cb;
+				// ピクセル
+				if (SUCCEEDED(deviceContext->Map(m_pPSConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData)))
+				{
+					pmx::PmxMaterial& material = m_model.materials[i];
+					std::wstring name = m_model.textures[2];
+					//cb. = mWorld;
+					//D3DXMatrixTranspose(&cb.mW, &cb.mW);
+					//D3DMATRIX m = mWorld*viewMat*projMat;
+					//cb.mWVP = m;
+					//D3DXMatrixTranspose(&cb.mWVP, &cb.mWVP
+					// ハーフベクトルのために視線ターゲットのワールド座標算出
+					D3DXVECTOR3 eyeVec = Director::instance()->framework()->vLookatPt() - Director::instance()->framework()->vEyePt();
+					D3DXVec3Normalize(&eyeVec, &eyeVec);
 
-			//	memcpy_s(pData.pData, pData.RowPitch, (void*)&cb, sizeof(PMX_PS_CONSTANT_BUFFER));
-			//	deviceContext->Unmap(m_pVSConstantBuffer, 0);
-			//}
+					cb.diffuse.x = m_model.materials[i].diffuse[0];
+					cb.diffuse.y = m_model.materials[i].diffuse[1];
+					cb.diffuse.z = m_model.materials[i].diffuse[2];
+					cb.diffuse.w = 1.0f;
+					cb.ambient.x = m_model.materials[i].ambient[0];
+					cb.ambient.y = m_model.materials[i].ambient[1];
+					cb.ambient.z = m_model.materials[i].ambient[2];
+					cb.specular.x = m_model.materials[i].specular[0];
+					cb.specular.y = m_model.materials[i].specular[1];
+					cb.specular.z = m_model.materials[i].specular[2];
+					cb.shininess = m_model.materials[i].specularlity;
+					if (material.diffuse_texture_index == 3){
+						int jjj = 0;
+					}
+					cb.edgeColor = m_model.materials[i].edge_color;
+					cb.edgeSize = m_model.materials[i].edge_size;
+					cb.fSphereMode = m_model.materials[i].sphere_op_mode;
+					cb.lightDirection = m_vLight;
+					cb.isEdge = m_model.materials[i].flag;
+
+					D3DXVECTOR3 harf;
+					D3DXVec3Normalize(&harf, &(m_vLight + eyeVec));
+					cb.halfVector = harf;
+					memcpy_s(pData.pData, pData.RowPitch, (void*)&cb, sizeof(PMX_PS_CONSTANT_BUFFER));
+					deviceContext->Unmap(m_pVSConstantBuffer, 0);
+				}
+			}
 
 			deviceContext->VSSetConstantBuffers(0, 1, &m_pVSConstantBuffer);
-			deviceContext->PSSetConstantBuffers(0, 1, &m_pVSConstantBuffer);
-			deviceContext->PSSetShaderResources(0, 1, &m_pTexture[m_model.materials[i].diffuse_texture_index]);
+			deviceContext->PSSetConstantBuffers(0, 1, &m_pPSConstantBuffer);
+
+			// 普通のテクスチャ
+			if (m_model.materials[i].diffuse_texture_index != -1){
+				deviceContext->PSSetShaderResources(2, 1, &m_pTexture[m_model.materials[i].diffuse_texture_index]);
+			}
+			// スフィアのテクスチャ
+			if (m_model.materials[i].sphere_texture_index != -1){
+				deviceContext->PSSetShaderResources(1, 1, &m_pTexture[m_model.materials[i].sphere_texture_index]);
+			}
+			if (m_model.materials[i].toon_texture_index != -1){
+				deviceContext->PSSetShaderResources(0, 1, &m_pTexture[m_model.materials[i].toon_texture_index]);
+			}
 			deviceContext->DrawIndexed(m_model.materials[i].index_count, index, 0);
 			index += m_model.materials[i].index_count;
 			//m_model.materials[i].
@@ -234,9 +270,14 @@ HRESULT PMXModel::initShader(){
 	SAFE_RELEASE(pCompiledShader);
 
 	{
+		int csize = sizeof(PMX_VS_CONSTANT_BUFFER);
+		int amari = csize % 16;
+		if (amari != 0){
+			csize += 16 - amari;
+		}
 		D3D11_BUFFER_DESC cb;
 		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cb.ByteWidth = sizeof(PMX_VS_CONSTANT_BUFFER);
+		cb.ByteWidth = csize;
 		cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		cb.MiscFlags = 0;
 		cb.StructureByteStride = 0;
@@ -249,9 +290,14 @@ HRESULT PMXModel::initShader(){
 	}
 
 	{
+		int csize = sizeof(PMX_PS_CONSTANT_BUFFER);
+		int amari = csize % 16;
+		if (amari != 0){
+			csize += 16 - amari;
+		}
 		D3D11_BUFFER_DESC cb;
 		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cb.ByteWidth = sizeof(PMX_VS_CONSTANT_BUFFER);
+		cb.ByteWidth = csize;
 		cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		cb.MiscFlags = 0;
 		cb.StructureByteStride = 0;
@@ -420,14 +466,16 @@ HRESULT PMXModel::initTexture(){
 		}
 
 		// sampler
-		D3D11_SAMPLER_DESC samDesc;
-		ZeroMemory(&samDesc, sizeof(samDesc));
-		samDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		samDesc.AddressU = samDesc.AddressV = samDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		samDesc.MaxAnisotropy = 1;
-		samDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-		samDesc.MaxLOD = D3D11_FLOAT32_MAX;
+		for (int i = 0; i < 3; i++){
+			D3D11_SAMPLER_DESC samDesc;
+			ZeroMemory(&samDesc, sizeof(samDesc));
+			samDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+			samDesc.AddressU = samDesc.AddressV = samDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+			samDesc.MaxAnisotropy = 1;
+			samDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+			samDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-		device->CreateSamplerState(&samDesc, &m_pSamplerState);
+			device->CreateSamplerState(&samDesc, &m_pSamplerState[i]);
+		}
 	}
 }
