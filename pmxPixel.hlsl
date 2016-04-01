@@ -77,7 +77,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
 		if (intensity > 0.99) scatteredLight = ambient + (diffuse.rgb*lightColor*.8);
 		else if (intensity > 0.3) scatteredLight = ambient + (diffuse.rgb*lightColor * 0.75);
-		else scatteredLight = ambient + (diffuse.rgb *lightColor * 0.5);
+		else scatteredLight = ambient + (diffuse.rgb *lightColor * 1.2);
 
 		float specularWeight;
 		if (intensity == 0.0) //if surface is facing away from light
@@ -91,7 +91,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
 		intensity = dot(normalize(input.normal), halfVector);
 		float3 reflectedLight = float3(0.0, 0.0, 0.0);
-		if (intensity>.999)reflectedLight = (specular*specularWeight);
+		//if (intensity>.999)reflectedLight = (specular*specularWeight);
 
 
 		float dotNL = max(0.0, dot(normalize(lightDirection), normalize(input.normal)));
