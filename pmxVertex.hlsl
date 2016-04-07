@@ -3,13 +3,9 @@
 cbuffer global
 {
 	matrix g_mW;
+	matrix g_mV;
+	matrix g_mP;
 	matrix g_mWVP;
-	float4 g_vLightDir;
-	float4 g_Diffuse = float4(1, 0, 0, 0);
-	float4 g_vAmbient;
-	float4 g_vSpecular;
-	float4 g_Specularlity;
-	float4 g_vEye;
 };
 
 struct VS_OUTPUT
@@ -25,7 +21,9 @@ VS_OUTPUT VS(float4 Pos : POSITION,
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
 
-	output.Pos = mul(Pos, g_mWVP);
+
+
+	output.Pos = mul(Pos, mul(mul(g_mW, g_mV), g_mP));
 	output.Normal = mul(Normal, (float3x3)g_mW);
 	//output.Light = g_vLightDir;
 

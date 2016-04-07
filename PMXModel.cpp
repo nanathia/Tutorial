@@ -9,6 +9,7 @@
 // DirectX系の解放マクロです。
 #define SAFE_RELEASE(x) if (x){ x->Release(); x; }
 
+#define LIMIT_BONE_COUNT 512
 
 PMXModel::PMXModel(const char* directory, const char* fileName)
 {
@@ -17,6 +18,7 @@ PMXModel::PMXModel(const char* directory, const char* fileName)
 	initShader();
 	initPolygon();
 	initTexture();
+	initBone();
 }
 
 
@@ -53,13 +55,9 @@ namespace{
 	struct PMX_VS_CONSTANT_BUFFER
 	{
 		D3DXMATRIX mW;
+		D3DXMATRIX mV;
+		D3DXMATRIX mP;
 		D3DXMATRIX mWVP;
-		D3DXVECTOR4 vLightDir;
-		D3DXVECTOR4 vDiffuse;
-		D3DXVECTOR4 vAmbient;
-		D3DXVECTOR4 vSpecular;
-		D3DXVECTOR4 vSpecularlity;
-		D3DXVECTOR4 vEye;
 	};
 	struct PMX_PS_CONSTANT_BUFFER{
 		D3DXVECTOR3 ambient;
@@ -79,6 +77,15 @@ namespace{
 
 }
 
+// 親基点にする
+void PMXModel::CalcRelativeMat(Bone* tar, const D3DXMATRIX* parentOfs){
+	// 子があれば再優先
+	if (tar->firstChild) CalcRelativeMat(tar->firstChild, &tar->offsetMat);
+	// 次があれば優先
+	if (tar->sibling) CalcRelativeMat(tar->sibling, &tar->offsetMat);
+	// 親あれば計算して終わり
+	if (parentOfs) tar->initMat *= *parentOfs;
+}
 
 void PMXModel::draw(){
 	ID3D11Device* device = Director::instance()->framework()->device();
@@ -123,27 +130,13 @@ void PMXModel::draw(){
 					std::wstring name = m_model.textures[2];
 					cb.mW = mWorld;
 					D3DXMatrixTranspose(&cb.mW, &cb.mW);
+					cb.mV = viewMat;
+					D3DXMatrixTranspose(&cb.mV, &cb.mV);
+					cb.mP = projMat;
+					D3DXMatrixTranspose(&cb.mP, &cb.mP);
 					D3DMATRIX m = mWorld*viewMat*projMat;
 					cb.mWVP = m;
 					D3DXMatrixTranspose(&cb.mWVP, &cb.mWVP);
-					cb.vDiffuse.x = m_model.materials[i].diffuse[0];
-					cb.vDiffuse.y = m_model.materials[i].diffuse[1];
-					cb.vDiffuse.z = m_model.materials[i].diffuse[2];
-					cb.vDiffuse.w = 1.0f;
-					cb.vAmbient.x = m_model.materials[i].ambient[0];
-					cb.vAmbient.y = m_model.materials[i].ambient[1];
-					cb.vAmbient.z = m_model.materials[i].ambient[2];
-					cb.vAmbient.w = 1.0f;
-					cb.vSpecular.x = m_model.materials[i].specular[0];
-					cb.vSpecular.y = m_model.materials[i].specular[1];
-					cb.vSpecular.z = m_model.materials[i].specular[2];
-					cb.vSpecular.w = 1.0f;
-					cb.vSpecularlity[0] = m_model.materials[i].specularlity;
-					if (material.diffuse_texture_index == 3){
-						int jjj = 0;
-					}
-					cb.vLightDir = (D3DXVECTOR4)m_vLight;
-					cb.vEye = D3DXVECTOR4(vEyePt.x, vEyePt.y, vEyePt.z, 0.0f);
 
 					memcpy_s(pData.pData, pData.RowPitch, (void*)&cb, sizeof(PMX_VS_CONSTANT_BUFFER));
 					deviceContext->Unmap(m_pVSConstantBuffer, 0);
@@ -240,12 +233,12 @@ HRESULT PMXModel::initShader(){
 	
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "POSITION", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "POSITION", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDWEIGHT", 0, DXGI_FORMAT_R32_FLOAT, 0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 60, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDWEIGHT", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	UINT numElements = sizeof(layout) / sizeof(layout[0]);
 	if (FAILED(device->CreateInputLayout(layout, numElements,
@@ -478,4 +471,53 @@ HRESULT PMXModel::initTexture(){
 			device->CreateSamplerState(&samDesc, &m_pSamplerState[i]);
 		}
 	}
+}
+
+HRESULT PMXModel::initBone(){
+	ASSERT(m_model.bone_count <= LIMIT_BONE_COUNT && "非対応ボーン数");
+	m_renderedBones = new D3DXMATRIX[m_model.bone_count];
+	m_Bones = new Bone[m_model.bone_count];
+	// PMXボーン初期姿勢に回転情報はない
+	for (int i = 0; i < m_model.bone_count; i++){
+		// とりあローカルで
+		D3DXMatrixTranslation(&m_Bones[i].initMat, m_model.bones[i].position[0], m_model.bones[i].position[1], m_model.bones[i].position[2]);
+		// オフセ
+		D3DXMatrixInverse(&m_Bones[i].offsetMat, 0, &m_Bones[i].initMat);
+		// id
+		m_Bones[i].id = i;
+		// comb
+		m_Bones[i].combMatAry = m_renderedBones;
+	}
+	// 親子付
+	for (int i = 0; i < m_model.bone_count; i++){
+		if (m_model.bones[i].parent_index != -1){
+			Bone* tar = m_Bones[m_model.bones[i].parent_index].firstChild;
+			// 一番後ろにつける
+			if (tar){
+				// 次以降もある
+				while (true){
+					if (!tar->sibling){
+						break;
+					}
+					tar = tar->sibling;
+				}
+				// これが最後
+				tar->sibling = &m_Bones[i];
+			}
+			else{
+				// 一つもない
+				m_Bones[m_model.bones[i].parent_index].firstChild = &m_Bones[i];
+			}
+		}
+	}
+	// オフセ付
+	for (int i = 0; i < m_model.bone_count; i++){
+		if (m_model.bones[i].parent_index == -1){
+			// 親がない場合
+			CalcRelativeMat(&m_Bones[i], 0);
+		}
+	}
+	//m_vertexConstantSize = sizeof(PMX_VS_CONSTANT_BUFFER) - sizeof(D3DXMATRIX)*LIMIT_BONE_COUNT + sizeof(D3DXMATRIX) * m_model.bone_count;
+
+	return S_OK;
 }

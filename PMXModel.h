@@ -22,6 +22,16 @@
 class PMXModel :
 	public Ref
 {
+	struct Bone{
+		int id;
+		Bone *firstChild = NULL;
+		Bone *sibling = NULL;
+
+		D3DXMATRIX offsetMat;
+		D3DXMATRIX initMat;
+		D3DXMATRIX boneMat;
+		D3DXMATRIX *combMatAry = NULL;
+	};
 	// 生データ
 	pmx::PmxModel m_model;
 
@@ -38,6 +48,13 @@ class PMXModel :
 	ID3D11SamplerState* m_pSamplerState[3];
 	ID3D11ShaderResourceView** m_pTexture = NULL;
 
+	// シェーダに渡すボーン配列。シェーダに渡すために、一列でなければならない。
+	D3DXMATRIX* m_renderedBones = NULL;
+	Bone* m_Bones = NULL;
+
+	// 親基点にする
+	void CalcRelativeMat(Bone* tar, const D3DXMATRIX* parentOfs);
+
 public:
 	PMXModel(const char* directory, const char* fileName);
 	~PMXModel();
@@ -48,5 +65,6 @@ private:
 	HRESULT initShader();
 	HRESULT initPolygon();
 	HRESULT initTexture();
+	HRESULT initBone();
 };
 
