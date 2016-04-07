@@ -1,4 +1,4 @@
-﻿2016/04/07 12:10:10 にビルドを開始しました。
+﻿2016/04/07 12:33:21 にビルドを開始しました。
      1>ノード 2 上のプロジェクト "C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\TEST33.vcxproj" (Build ターゲット)。
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt PMXModel.cpp
@@ -59,8 +59,9 @@
                  c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50445) : 'D3D10_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS' の前の定義を確認してください
      1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\d3d10.h(609): warning C4005: 'D3D10_ERROR_FILE_NOT_FOUND' : マクロが再定義されました。
                  c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50454) : 'D3D10_ERROR_FILE_NOT_FOUND' の前の定義を確認してください
-     1>c:\users\tpmk9_000\appdata\local\github\tutorialrepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\pmxmodel.cpp(181): warning C4800: 'uint8_t' : ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
-     1>c:\users\tpmk9_000\appdata\local\github\tutorialrepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\pmxmodel.cpp(474): warning C4715: 'PMXModel::initTexture' : 値を返さないコントロール パスがあります。
+     1>c:\users\tpmk9_000\appdata\local\github\tutorialrepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\pmxmodel.cpp(207): warning C4800: 'uint8_t' : ブール値を 'true' または 'false' に強制的に設定します (警告の処理)
+     1>c:\users\tpmk9_000\appdata\local\github\tutorialrepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\pmxmodel.cpp(359): warning C4244: '=' : 'unsigned int' から 'float' への変換です。データが失われる可能性があります。
+     1>c:\users\tpmk9_000\appdata\local\github\tutorialrepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\pmxmodel.cpp(523): warning C4715: 'PMXModel::initTexture' : 値を返さないコントロール パスがあります。
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\Debug\TEST33.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\Debug\TEST33.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\Debug\TEST33.lib" /MACHINE:X86 Debug\ApiMiku.obj
          Debug\AutoReleasePool.obj
@@ -81,4 +82,4 @@
 
 ビルドに成功しました。
 
-経過時間 00:00:01.79
+経過時間 00:00:03.05

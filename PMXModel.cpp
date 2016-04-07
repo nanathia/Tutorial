@@ -24,6 +24,9 @@ PMXModel::PMXModel(const char* directory, const char* fileName)
 
 PMXModel::~PMXModel()
 {
+	delete[] m_renderedBones;
+	m_renderedBones = 0;
+	SAFE_DELETE_ARRAY(m_Bones);
 	for (int i = 0; i < 3; i++){
 		SAFE_RELEASE(m_pSamplerState[i]);
 	}
@@ -58,6 +61,7 @@ namespace{
 		D3DXMATRIX mV;
 		D3DXMATRIX mP;
 		D3DXMATRIX mWVP;
+		D3DXMATRIX mBones[LIMIT_BONE_COUNT];
 	};
 	struct PMX_PS_CONSTANT_BUFFER{
 		D3DXVECTOR3 ambient;
@@ -108,6 +112,28 @@ void PMXModel::draw(){
 	for (int i = 0; i < m_model.texture_count; i++){
 		test[i] = m_model.textures[i];
 	}
+
+	// ボーン更新 動かす場所
+	for (int i = 0; i < 7; i++)
+		m_Bones[i].boneMat = /*defBone[i] * */m_Bones[i].initMat;
+
+	D3DXMATRIX global;
+	D3DXMatrixRotationZ(&global, timeGetTime()/1000 * 0.1f);
+	struct UpdateBone {
+		static void run(Bone* me, D3DXMATRIX *parentWorldMat) {
+			// 先ほど算出した姿勢に、親からの姿勢を掛け算する。
+			me->boneMat *= *parentWorldMat;
+			// 自分のIDの（最終的なシェーダへの）出力行列に・・・？自分の差分行列と姿勢行列を掛けている。なんで？？？？？
+			me->combMatAry[me->id] = me->offsetMat * me->boneMat;
+			if (me->firstChild)
+				// 子があれば更に深く。
+				run(me->firstChild, &me->boneMat);
+			if (me->sibling)
+				// 子の処理が終わり且つ、次があれば次へ。
+				run(me->sibling, parentWorldMat);
+		};
+	};
+	UpdateBone::run(m_Bones, &global);
 
 	{
 		// 2016-03-27 pmx 描画
@@ -325,10 +351,33 @@ HRESULT PMXModel::initPolygon(){
 			vertices[i].Pos.x = m_model.vertices.get()[i].positon[0];
 			vertices[i].Pos.y = m_model.vertices.get()[i].positon[1];
 			vertices[i].Pos.z = m_model.vertices.get()[i].positon[2];
+			//vertices[i].Pos.w = 1.f;
 			//m_model.materials[0].
 			//vertices[i].vBoneIndices.x = m_model.bones[i].
 			vertices[i].Tex[0] = m_model.vertices[i].uv[0];
 			vertices[i].Tex[1] = m_model.vertices[i].uv[1];
+			vertices[i].vWeitFormula = (unsigned)m_model.vertices[i].skinning_type;
+			if (m_model.vertices[i].skinning_type == pmx::PmxVertexSkinningType::BDEF1){
+				pmx::PmxVertexSkinningBDEF1* bdef1 = reinterpret_cast<pmx::PmxVertexSkinningBDEF1*>(&m_model.vertices[i].skinning);
+				unsigned* out = reinterpret_cast<unsigned*>(&vertices[i].vBoneIndices);
+				out[0] = (unsigned)bdef1->bone_index;
+			}
+			else if (m_model.vertices[i].skinning_type == pmx::PmxVertexSkinningType::BDEF2){
+				pmx::PmxVertexSkinningBDEF2* bdef2 = reinterpret_cast<pmx::PmxVertexSkinningBDEF2*>(&m_model.vertices[i].skinning);
+				unsigned* out = reinterpret_cast<unsigned*>(&vertices[i].vBoneIndices);
+				out[0] = (unsigned)bdef2->bone_index1;
+				out[1] = (unsigned)bdef2->bone_index2;
+				vertices[i].vBoneWeights[0] = bdef2->bone_weight;
+			}
+			else if (m_model.vertices[i].skinning_type == pmx::PmxVertexSkinningType::BDEF4){
+				HALT(f);
+			}
+			else if (m_model.vertices[i].skinning_type == pmx::PmxVertexSkinningType::QDEF){
+				HALT(f);
+			}
+			else if (m_model.vertices[i].skinning_type == pmx::PmxVertexSkinningType::SDEF){
+				HALT(f);
+			}
 		}
 
 		D3D11_BUFFER_DESC bd;
