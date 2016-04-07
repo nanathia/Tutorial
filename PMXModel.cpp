@@ -164,6 +164,11 @@ void PMXModel::draw(){
 					cb.mWVP = m;
 					D3DXMatrixTranspose(&cb.mWVP, &cb.mWVP);
 
+					for (int j = 0; j < m_model.bone_count; j++){
+						cb.mBones[j] = m_renderedBones[i];
+						D3DXMatrixTranspose(&cb.mBones[j], &cb.mBones[j]);
+					}
+
 					memcpy_s(pData.pData, pData.RowPitch, (void*)&cb, sizeof(PMX_VS_CONSTANT_BUFFER));
 					deviceContext->Unmap(m_pVSConstantBuffer, 0);
 				}

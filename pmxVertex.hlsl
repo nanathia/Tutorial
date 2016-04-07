@@ -56,27 +56,27 @@ VS_OUTPUT VS(float4 vPosition : POSITION0,
 
 	newNormal = float4(vNormal, 0.0);
 
-	if (1){
-		newVertex = mul(vPosition, mul(mul(g_mW, g_mV), g_mP));
-		newNormal = normalize(mul(vNormal, g_mW));
-	}
+	//if (1){
+	//	newVertex = mul(vPosition, mul(mul(g_mW, g_mV), g_mP));
+	//	newNormal = normalize(mul(vNormal, g_mW));
+	//}
 	//else
 
-		//if (weightFormula == 0) //BDEF1
-		//{
-		//	newVertex = mul(Bones[index1], vPosition);
-		//	newNormal = mul(Bones[index1], float4(vNormal, 0.0));
+		if (weightFormula == 0) //BDEF1
+		{
+			newVertex = mul(Bones[index1], vPosition);
+			newNormal = mul(Bones[index1], float4(vNormal, 0.0));
 
-		//}
-		//else if (weightFormula == 1) //BDEF2 
-		//{
-		//	newVertex = mul(Bones[index1], vPosition)          * vBoneWeights.x;
-		//	newVertex += mul(Bones[index2], vPosition)          * (1.0 - vBoneWeights.x);
+		}
+		else if (weightFormula == 1) //BDEF2 
+		{
+			newVertex = mul(Bones[index1], vPosition)          * vBoneWeights.x;
+			newVertex += mul(Bones[index2], vPosition)          * (1.0 - vBoneWeights.x);
 
-		//	newNormal = mul(Bones[index1], float4(vNormal, 0.0)) * vBoneWeights.x;
-		//	newNormal += mul(Bones[index2], float4(vNormal, 0.0)) * (1.0 - vBoneWeights.x);
+			newNormal = mul(Bones[index1], float4(vNormal, 0.0)) * vBoneWeights.x;
+			newNormal += mul(Bones[index2], float4(vNormal, 0.0)) * (1.0 - vBoneWeights.x);
 
-		//}
+		}
 		//else if (weightFormula == 2) //BDEF4
 		//{
 		//	newVertex = (Bones[index1] * vPosition)          * vBoneWeights.x;
