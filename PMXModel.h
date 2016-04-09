@@ -9,7 +9,7 @@
 #include <D3DX11.h>
 #include <D3Dcompiler.h>
 #include "lib/MikuMikuFormats/Pmx.h"
-#include "Ref.h"
+#include "INCLUDES.h"
 
 #pragma comment(lib,"winmm.lib")
 #pragma comment(lib,"d3dx10.lib")
@@ -19,11 +19,16 @@
 
 #include "lib/MikuMikuFormats/Pmx.h"
 
+
 class PMXModel :
 	public Ref
 {
 	struct Bone{
+#ifdef TEST_SIZURU
+		std::string name;
+#endif
 		int id;
+		Bone *parent = NULL;
 		Bone *firstChild = NULL;
 		Bone *sibling = NULL;
 
@@ -47,13 +52,12 @@ class PMXModel :
 	ID3D11Buffer* m_pIndexBuffer = NULL;
 	ID3D11SamplerState* m_pSamplerState[3];
 	ID3D11ShaderResourceView** m_pTexture = NULL;
+	// コンスタントサイズ
+	int m_vertexConstantSize = 0;
 
 	// シェーダに渡すボーン配列。シェーダに渡すために、一列でなければならない。
 	D3DXMATRIX* m_renderedBones = NULL;
 	Bone* m_Bones = NULL;
-
-	// 親基点にする
-	void CalcRelativeMat(Bone* tar, const D3DXMATRIX* parentOfs);
 
 public:
 	PMXModel(const char* directory, const char* fileName);

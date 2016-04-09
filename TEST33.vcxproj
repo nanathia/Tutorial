@@ -96,7 +96,9 @@
     <ClInclude Include="AutoReleasePool.h" />
     <ClInclude Include="DEFINE.h" />
     <ClInclude Include="Director.h" />
+    <ClInclude Include="Ground.h" />
     <ClInclude Include="GyuDon.h" />
+    <ClInclude Include="INCLUDES.h" />
     <ClInclude Include="lib\MikuMikuFormats\EncodingHelper.h" />
     <ClInclude Include="lib\MikuMikuFormats\Pmd.h" />
     <ClInclude Include="lib\MikuMikuFormats\Pmx.h" />
@@ -114,6 +116,7 @@
     <ClCompile Include="AutoReleasePool.cpp" />
     <ClCompile Include="DEFINE.cpp" />
     <ClCompile Include="Director.cpp" />
+    <ClCompile Include="Ground.cpp" />
     <ClCompile Include="GyuDon.cpp" />
     <ClCompile Include="lib\MikuMikuFormats\Pmx.cpp" />
     <ClCompile Include="MAIN.cpp" />

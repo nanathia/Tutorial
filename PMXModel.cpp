@@ -6,19 +6,20 @@
 #include "lib\MikuMikuFormats\Pmx.h"
 #include <string>
 
+#define LIMIT_BONE_COUNT 512
+
 // DirectX系の解放マクロです。
 #define SAFE_RELEASE(x) if (x){ x->Release(); x; }
 
-#define LIMIT_BONE_COUNT 512
 
 PMXModel::PMXModel(const char* directory, const char* fileName)
 {
 	m_vLight = D3DXVECTOR3(0, -0.5, 0.5);
 	D3DXVec3Normalize(&m_vLight, &m_vLight);
-	initShader();
-	initPolygon();
-	initTexture();
-	initBone();
+	ASSERT(SUCCEEDED(initShader()));
+	ASSERT(SUCCEEDED(initPolygon()));
+	ASSERT(SUCCEEDED(initTexture()));
+	ASSERT(SUCCEEDED(initBone()));
 }
 
 
@@ -48,20 +49,19 @@ namespace{
 
 	struct SimpleVertex
 	{
-		D3DXVECTOR3 Pos;
-		D3DXVECTOR4 vBoneWeights;
+		D3DXVECTOR4 Pos;
 		unsigned vBoneIndices[4];
-		float vWeitFormula;
+		D3DXVECTOR4 vBoneWeights; // 最大四点ウェイト
+		unsigned vWeitFormula;
 		D3DXVECTOR3 Normal;
 		float Tex[2];
 	};
 	struct PMX_VS_CONSTANT_BUFFER
 	{
-		D3DXMATRIX mW;
 		D3DXMATRIX mV;
 		D3DXMATRIX mP;
-		D3DXMATRIX mWVP;
-		D3DXMATRIX mBones[LIMIT_BONE_COUNT];
+		D3DXMATRIX test;
+		D3DXMATRIX mW[LIMIT_BONE_COUNT];
 	};
 	struct PMX_PS_CONSTANT_BUFFER{
 		D3DXVECTOR3 ambient;
@@ -81,24 +81,16 @@ namespace{
 
 }
 
-// 親基点にする
-void PMXModel::CalcRelativeMat(Bone* tar, const D3DXMATRIX* parentOfs){
-	// 子があれば再優先
-	if (tar->firstChild) CalcRelativeMat(tar->firstChild, &tar->offsetMat);
-	// 次があれば優先
-	if (tar->sibling) CalcRelativeMat(tar->sibling, &tar->offsetMat);
-	// 親あれば計算して終わり
-	if (parentOfs) tar->initMat *= *parentOfs;
-}
-
 void PMXModel::draw(){
 	ID3D11Device* device = Director::instance()->framework()->device();
 	ID3D11DeviceContext* deviceContext = Director::instance()->framework()->deviceContext();
 	const D3DXMATRIX& projMat = Director::instance()->framework()->projMat();
 	const D3DXMATRIX& viewMat = Director::instance()->framework()->viewMat();
-
+	// テスト用
 	D3DXMATRIX mWorld;
 	D3DXMatrixRotationY(&mWorld, timeGetTime() / 1000.0f);
+
+	float val = timeGetTime() / 1000.0f;
 	const D3DXVECTOR3& vEyePt = Director::instance()->framework()->vEyePt();
 
 	deviceContext->VSSetShader(m_pVertexShader, NULL, 0);
@@ -106,34 +98,50 @@ void PMXModel::draw(){
 
 	deviceContext->IASetInputLayout(m_pVertexLayout);
 	deviceContext->PSSetSamplers(0, 3, m_pSamplerState);
-	
 
-	std::wstring test[100];
-	for (int i = 0; i < m_model.texture_count; i++){
-		test[i] = m_model.textures[i];
+	D3DXMATRIX testRota;
+	D3DXMatrixRotationAxis(&testRota, &D3DXVECTOR3(1.f, 0.f, 0.f), timeGetTime()*M_PI/1000.f);
+
+	// 差分生成。実際に動かしたい値をここで用意しておく。
+	for (int i = 0; i < m_model.bone_count; i++){
+		Bone* bone = &m_Bones[i];
+		if (bone->id != 10){
+			D3DXMatrixIdentity(&bone->boneMat);
+		}
+		else{
+			bone->boneMat = testRota;
+		}
 	}
 
-	// ボーン更新 動かす場所
-	for (int i = 0; i < 7; i++)
-		m_Bones[i].boneMat = /*defBone[i] * */m_Bones[i].initMat;
-
-	D3DXMATRIX global;
-	D3DXMatrixRotationZ(&global, timeGetTime()/1000 * 0.1f);
-	struct UpdateBone {
-		static void run(Bone* me, D3DXMATRIX *parentWorldMat) {
-			// 先ほど算出した姿勢に、親からの姿勢を掛け算する。
-			me->boneMat *= *parentWorldMat;
-			// 自分のIDの（最終的なシェーダへの）出力行列に・・・？自分の差分行列と姿勢行列を掛けている。なんで？？？？？
-			me->combMatAry[me->id] = me->offsetMat * me->boneMat;
-			if (me->firstChild)
-				// 子があれば更に深く。
-				run(me->firstChild, &me->boneMat);
-			if (me->sibling)
-				// 子の処理が終わり且つ、次があれば次へ。
-				run(me->sibling, parentWorldMat);
-		};
+	// ボーン情報をレンダリングする。シェーダに渡す形にする。初期姿勢であれば、単位行列になるはずだ。それでテストが出来る。
+	struct BoneToShader{
+		static void Render(Bone* bone){
+			if (bone->parent){
+				bone->boneMat = bone->boneMat * bone->initMat * bone->parent->boneMat;
+				bone->combMatAry[bone->id] = bone->offsetMat * bone->boneMat;
+			}
+			else{
+				bone->boneMat = bone->initMat;
+				bone->combMatAry[bone->id] = bone->offsetMat * bone->boneMat;
+			}
+			// 親は当然先に計算しなければ意味が無い。ローカルにならない。そして子に波及する。兄弟と子はこの場合順を問わない。
+			if (bone->firstChild){
+				Render(bone->firstChild);
+			}
+			if (bone->sibling){
+				Render(bone->sibling);
+			}
+		}
 	};
-	UpdateBone::run(m_Bones, &global);
+	BoneToShader::Render(&m_Bones[0]);
+
+
+
+	// コンスタント配列に押し込む
+	//for (int i = 0; i < m_model.bone_count; i++){
+	//	Bone* bone = &m_Bones[i];
+	//	bone->combMatAry[i] = bone->boneMat;
+	//}
 
 	{
 		// 2016-03-27 pmx 描画
@@ -145,7 +153,6 @@ void PMXModel::draw(){
 		int index = 0;
 		for (int i = 0; i < m_model.material_count; i++)
 		{
-
 			{
 				D3D11_MAPPED_SUBRESOURCE pData;
 				PMX_VS_CONSTANT_BUFFER cb;
@@ -154,20 +161,17 @@ void PMXModel::draw(){
 				{
 					pmx::PmxMaterial& material = m_model.materials[i];
 					std::wstring name = m_model.textures[2];
-					cb.mW = mWorld;
-					D3DXMatrixTranspose(&cb.mW, &cb.mW);
+					for (int j = 0; j < m_model.bone_count; j++){
+						cb.mW[j] = m_renderedBones[j]*mWorld;
+						D3DXMatrixTranspose(&cb.mW[j], &cb.mW[j]);
+					}
 					cb.mV = viewMat;
 					D3DXMatrixTranspose(&cb.mV, &cb.mV);
 					cb.mP = projMat;
 					D3DXMatrixTranspose(&cb.mP, &cb.mP);
-					D3DMATRIX m = mWorld*viewMat*projMat;
-					cb.mWVP = m;
-					D3DXMatrixTranspose(&cb.mWVP, &cb.mWVP);
-
-					for (int j = 0; j < m_model.bone_count; j++){
-						cb.mBones[j] = m_renderedBones[i];
-						D3DXMatrixTranspose(&cb.mBones[j], &cb.mBones[j]);
-					}
+					//m_model.vertices[i].skinning
+					cb.test = mWorld/**projMat*viewMat*/;
+					D3DXMatrixTranspose(&cb.test, &cb.test);
 
 					memcpy_s(pData.pData, pData.RowPitch, (void*)&cb, sizeof(PMX_VS_CONSTANT_BUFFER));
 					deviceContext->Unmap(m_pVSConstantBuffer, 0);
@@ -264,12 +268,18 @@ HRESULT PMXModel::initShader(){
 	
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "POSITION", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "POSITION", 2, DXGI_FORMAT_R32G32B32A32_UINT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDWEIGHT", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDWEIGHT", 0, DXGI_FORMAT_R32_UINT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		//D3DXVECTOR3 Pos;
+		//D3DXVECTOR4 vBoneIndices;
+		//D3DXVECTOR4 vBoneWeights; // 最大四点ウェイト
+		//float vWeitFormula;
+		//D3DXVECTOR3 Normal;
+		//float Tex[2];
 	};
 	UINT numElements = sizeof(layout) / sizeof(layout[0]);
 	if (FAILED(device->CreateInputLayout(layout, numElements,
@@ -356,31 +366,43 @@ HRESULT PMXModel::initPolygon(){
 			vertices[i].Pos.x = m_model.vertices.get()[i].positon[0];
 			vertices[i].Pos.y = m_model.vertices.get()[i].positon[1];
 			vertices[i].Pos.z = m_model.vertices.get()[i].positon[2];
-			//vertices[i].Pos.w = 1.f;
+			vertices[i].Pos.w = 1.f;
 			//m_model.materials[0].
 			//vertices[i].vBoneIndices.x = m_model.bones[i].
 			vertices[i].Tex[0] = m_model.vertices[i].uv[0];
 			vertices[i].Tex[1] = m_model.vertices[i].uv[1];
 			vertices[i].vWeitFormula = (unsigned)m_model.vertices[i].skinning_type;
 			if (m_model.vertices[i].skinning_type == pmx::PmxVertexSkinningType::BDEF1){
-				pmx::PmxVertexSkinningBDEF1* bdef1 = reinterpret_cast<pmx::PmxVertexSkinningBDEF1*>(&m_model.vertices[i].skinning);
-				unsigned* out = reinterpret_cast<unsigned*>(&vertices[i].vBoneIndices);
+				pmx::PmxVertexSkinning* skining = m_model.vertices[i].skinning.get();
+				pmx::PmxVertexSkinningBDEF1* bdef1 = reinterpret_cast<pmx::PmxVertexSkinningBDEF1*>(skining);
+				unsigned* out = vertices[i].vBoneIndices;
 				out[0] = (unsigned)bdef1->bone_index;
+				out[1] = 0;
+				out[2] = 0;
+				out[3] = 0;
 			}
 			else if (m_model.vertices[i].skinning_type == pmx::PmxVertexSkinningType::BDEF2){
-				pmx::PmxVertexSkinningBDEF2* bdef2 = reinterpret_cast<pmx::PmxVertexSkinningBDEF2*>(&m_model.vertices[i].skinning);
-				unsigned* out = reinterpret_cast<unsigned*>(&vertices[i].vBoneIndices);
+				pmx::PmxVertexSkinning* skining = m_model.vertices[i].skinning.get();
+				pmx::PmxVertexSkinningBDEF2* bdef2 = reinterpret_cast<pmx::PmxVertexSkinningBDEF2*>(skining);
+				unsigned* out = vertices[i].vBoneIndices;
 				out[0] = (unsigned)bdef2->bone_index1;
 				out[1] = (unsigned)bdef2->bone_index2;
+				//if (out[0] != 87 && out[0] != 125 && out[0] != 124){
+				//	int i = 0;
+				//}
+				out[2] = 0;
+				out[3] = 0;
 				vertices[i].vBoneWeights[0] = bdef2->bone_weight;
+				vertices[i].vBoneWeights[1] = 1.0f - bdef2->bone_weight;
+				int i = 0;
 			}
-			else if (m_model.vertices[i].skinning_type == pmx::PmxVertexSkinningType::BDEF4){
+			else if(m_model.vertices[i].skinning_type == pmx::PmxVertexSkinningType::BDEF4){
 				HALT(f);
 			}
-			else if (m_model.vertices[i].skinning_type == pmx::PmxVertexSkinningType::QDEF){
+			else if(m_model.vertices[i].skinning_type == pmx::PmxVertexSkinningType::QDEF){
 				HALT(f);
 			}
-			else if (m_model.vertices[i].skinning_type == pmx::PmxVertexSkinningType::SDEF){
+			else if(m_model.vertices[i].skinning_type == pmx::PmxVertexSkinningType::SDEF){
 				HALT(f);
 			}
 		}
@@ -525,53 +547,73 @@ HRESULT PMXModel::initTexture(){
 			device->CreateSamplerState(&samDesc, &m_pSamplerState[i]);
 		}
 	}
+
+	return S_OK;
 }
 
 HRESULT PMXModel::initBone(){
 	ASSERT(m_model.bone_count <= LIMIT_BONE_COUNT && "非対応ボーン数");
-	m_renderedBones = new D3DXMATRIX[m_model.bone_count];
+
+	// ボーンオブジェクトと、シェーダに渡すための配列が必要だ。
 	m_Bones = new Bone[m_model.bone_count];
-	// PMXボーン初期姿勢に回転情報はない
+	m_renderedBones = new D3DXMATRIX[m_model.bone_count];
+
+	// まず必要なのは何か？ローカルボーン座標だ。PMXには移動しか入っていない。
 	for (int i = 0; i < m_model.bone_count; i++){
-		// とりあローカルで
-		D3DXMatrixTranslation(&m_Bones[i].initMat, m_model.bones[i].position[0], m_model.bones[i].position[1], m_model.bones[i].position[2]);
-		// オフセ
-		D3DXMatrixInverse(&m_Bones[i].offsetMat, 0, &m_Bones[i].initMat);
-		// id
-		m_Bones[i].id = i;
-		// comb
-		m_Bones[i].combMatAry = m_renderedBones;
+		pmx::PmxBone& data = m_model.bones[i];
+		Bone* out = &m_Bones[i];
+		D3DXMatrixTranslation(&(out->initMat), data.position[0], data.position[1], data.position[2]);
+		out->combMatAry = m_renderedBones;
+		out->parent = 0;
+		out->firstChild = 0;
+		out->id = i;
+		out->sibling = 0;
 	}
-	// 親子付
+
+	// 色々やりやすくするために、親子関係をセットしておく必要がある。
 	for (int i = 0; i < m_model.bone_count; i++){
-		if (m_model.bones[i].parent_index != -1){
-			Bone* tar = m_Bones[m_model.bones[i].parent_index].firstChild;
-			// 一番後ろにつける
-			if (tar){
-				// 次以降もある
-				while (true){
-					if (!tar->sibling){
-						break;
-					}
-					tar = tar->sibling;
+		pmx::PmxBone& childData = m_model.bones[i];
+		Bone* child = &m_Bones[i];
+		if (childData.parent_index != -1){
+			Bone* parent = &m_Bones[childData.parent_index];
+			if (parent->firstChild){
+				Bone* sibling = parent->firstChild;
+				while (sibling->sibling){
+					sibling = sibling->sibling;
 				}
-				// これが最後
-				tar->sibling = &m_Bones[i];
+				sibling->sibling = child;
 			}
 			else{
-				// 一つもない
-				m_Bones[m_model.bones[i].parent_index].firstChild = &m_Bones[i];
+				parent->firstChild = child;
 			}
+			child->parent = parent;
 		}
 	}
-	// オフセ付
+
+	// 次に各ボーンのローカルオフセットだ。実際にボーンを動かすにはこいつがいる。
 	for (int i = 0; i < m_model.bone_count; i++){
-		if (m_model.bones[i].parent_index == -1){
-			// 親がない場合
-			CalcRelativeMat(&m_Bones[i], 0);
+		D3DXMatrixInverse(&m_Bones[i].offsetMat, 0, &m_Bones[i].initMat);
+	}
+
+	// それから上記を用いて、初期姿勢をローカルから親基点にする。これで差分行列が乗算できるようになる。
+	for (int i = 0; i < m_model.bone_count; i++){
+		Bone* bone = &m_Bones[i];
+		if (bone->parent){
+			bone->initMat *= bone->parent->offsetMat;
 		}
 	}
-	//m_vertexConstantSize = sizeof(PMX_VS_CONSTANT_BUFFER) - sizeof(D3DXMATRIX)*LIMIT_BONE_COUNT + sizeof(D3DXMATRIX) * m_model.bone_count;
+
+	// 初期化は完了。
+
+	// テスト用。ボーン名の情報追加。
+#ifdef TEST_SIZURU
+	for (int i = 0; i < m_model.bone_count; i++){
+		Bone* bone = &m_Bones[i];
+		char temp[512];
+		convert2Str(temp, m_model.bones[i].bone_name.c_str());
+		bone->name = temp;
+	}
+#endif
 
 	return S_OK;
 }

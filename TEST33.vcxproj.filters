@@ -14,6 +14,9 @@
     <Filter Include="framework">
       <UniqueIdentifier>{e2ca0af8-f844-44ce-b9f3-f52ac8f412d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{9adf31c7-affa-478f-a837-282a44075d3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\MikuMikuFormats\EncodingHelper.h">
@@ -29,7 +32,6 @@
       <Filter>pmxParsor</Filter>
     </ClInclude>
     <ClInclude Include="TGATexture.h" />
-    <ClInclude Include="GyuDon.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="ApiMiku.h" />
@@ -40,6 +42,11 @@
     <ClInclude Include="PMXModel.h" />
     <ClInclude Include="DEFINE.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Ground.h" />
+    <ClInclude Include="INCLUDES.h" />
+    <ClInclude Include="GyuDon.h">
+      <Filter>framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MAIN.cpp">
@@ -49,7 +56,6 @@
       <Filter>pmxParsor</Filter>
     </ClCompile>
     <ClCompile Include="TGATexture.cpp" />
-    <ClCompile Include="GyuDon.cpp" />
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="ApiMiku.cpp" />
@@ -60,9 +66,17 @@
     <ClCompile Include="PMXModel.cpp" />
     <ClCompile Include="DEFINE.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="GyuDon.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="pmxVertex.hlsl" />
-    <FxCompile Include="pmxPixel.hlsl" />
+    <FxCompile Include="pmxVertex.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="pmxPixel.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

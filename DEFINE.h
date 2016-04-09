@@ -36,3 +36,8 @@ namespace unknown{
 // ワイド文字、マルチバイト文字の変換
 void convert2WStr(wchar_t* dest, const char* src);
 void convert2Str(char* dest, const wchar_t* src);
+
+// テストフラグ
+#define TEST_SIZURU
+
+#define M_PI 3.14159265359

@@ -1,6 +1,9 @@
+
+// 2016-04-01 PMXEditerソースコード内、私がピクセルシェーダをhlslへ書き直したファイルになります。
+
 SamplerState g_textureSampler : register(s0);
-SamplerState g_sphereSampler : register(s1);
-SamplerState g_toonSampler : register(s2);
+SamplerState g_sphereSampler : register(s15);
+SamplerState g_toonSampler : register(s31);
 
 Texture2D g_textureDecal : register(t2);
 Texture2D g_sphereDecal : register(t1);
