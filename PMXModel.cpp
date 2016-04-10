@@ -14,8 +14,8 @@
 
 PMXModel::PMXModel(const char* directory, const char* fileName)
 {
-	m_vLight = D3DXVECTOR3(0, -0.5, 0.5);
-	D3DXVec3Normalize(&m_vLight, &m_vLight);
+	m_directoryName = directory;
+	m_fileName = fileName;
 	ASSERT(SUCCEEDED(initShader()));
 	ASSERT(SUCCEEDED(initPolygon()));
 	ASSERT(SUCCEEDED(initTexture()));
@@ -212,11 +212,13 @@ void PMXModel::draw(){
 					cb.edgeColor = m_model.materials[i].edge_color;
 					cb.edgeSize = m_model.materials[i].edge_size;
 					cb.fSphereMode = m_model.materials[i].sphere_op_mode;
-					cb.lightDirection = m_vLight;
+					cb.lightDirection = Director::instance()->framework()->getDirectionLight();
 					cb.isEdge = m_model.materials[i].flag;
+					cb.lightDirection = D3DXVECTOR3(0, -0.5, 0.5);
+					D3DXVec3Normalize(&cb.lightDirection, &cb.lightDirection);
 
 					D3DXVECTOR3 harf;
-					D3DXVec3Normalize(&harf, &(m_vLight + eyeVec));
+					D3DXVec3Normalize(&harf, &(cb.lightDirection + eyeVec));
 					cb.halfVector = harf;
 					memcpy_s(pData.pData, pData.RowPitch, (void*)&cb, sizeof(PMX_PS_CONSTANT_BUFFER));
 					deviceContext->Unmap(m_pVSConstantBuffer, 0);
@@ -352,8 +354,10 @@ HRESULT PMXModel::initPolygon(){
 
 	// 2016-03-24 追加 pmxレンダリングテスト
 	//const char *filename = "dat/pmx/tda_apemiku/Tda式初音ミク・アペンド_Ver1.00.pmx";
-	const char *filename = "dat/pmx/oniko/日本鬼子0.15.pmx";
-	std::ifstream stream = std::ifstream(filename, std::ios_base::binary);
+	//const char *filename = "dat/pmx/oniko/日本鬼子0.15.pmx";
+	std::string str = (m_directoryName + "/" + m_fileName).c_str();
+	const char *filename_ = str.c_str();
+	std::ifstream stream = std::ifstream(filename_, std::ios_base::binary);
 	m_model.Read(&stream);
 
 	stream.close();

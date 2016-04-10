@@ -47,6 +47,14 @@
     <ClInclude Include="GyuDon.h">
       <Filter>framework</Filter>
     </ClInclude>
+    <ClInclude Include="MyVector.h" />
+    <ClInclude Include="OBJFileModelGroup.h" />
+    <ClInclude Include="OBJFileModelMesh.h" />
+    <ClInclude Include="OBJModelFile.h" />
+    <ClInclude Include="MTLFileModelMaterial.h" />
+    <ClInclude Include="NomalModel.h" />
+    <ClInclude Include="MySTL.h" />
+    <ClInclude Include="ModelDaiturenShoturen.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MAIN.cpp">
@@ -70,12 +78,22 @@
     <ClCompile Include="GyuDon.cpp">
       <Filter>framework</Filter>
     </ClCompile>
+    <ClCompile Include="MyVector.cpp" />
+    <ClCompile Include="OBJFileModelGroup.cpp" />
+    <ClCompile Include="OBJFileModelMesh.cpp" />
+    <ClCompile Include="OBJModelFile.cpp" />
+    <ClCompile Include="MTLFileModelMaterial.cpp" />
+    <ClCompile Include="NomalModel.cpp" />
+    <ClCompile Include="ModelDaiturenShoturen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="pmxVertex.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="pmxPixel.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="dat\shader\tuuren_toushin.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

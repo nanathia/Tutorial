@@ -1,18 +1,16 @@
 #include "PlayScene.h"
 #include "PMXModel.h"
+#include "Oniko.h"
 
 PlayScene::PlayScene()
 {
-	m_pmx = new PMXModel("", "");
-	m_pmx->autoRelease();
-	m_pmx->retain();
+	OBJECT_CREATE(m_oniko, new Oniko());
 }
 
 
 PlayScene::~PlayScene()
 {
-	m_pmx->release();
-	m_pmx = 0;
+	OBJECT_RELEASE(m_oniko);
 }
 
 
@@ -21,5 +19,5 @@ void PlayScene::update(){
 
 
 void PlayScene::draw(){
-	m_pmx->draw();
+	m_oniko->draw();
 }

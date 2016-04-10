@@ -40,8 +40,6 @@ class PMXModel :
 	// 生データ
 	pmx::PmxModel m_model;
 
-	// ライトベクトル
-	D3DXVECTOR3 m_vLight;
 	// 頂点レイアウト
 	ID3D11InputLayout* m_pVertexLayout = NULL;
 	ID3D11VertexShader* m_pVertexShader = NULL;
@@ -58,6 +56,10 @@ class PMXModel :
 	// シェーダに渡すボーン配列。シェーダに渡すために、一列でなければならない。
 	D3DXMATRIX* m_renderedBones = NULL;
 	Bone* m_Bones = NULL;
+
+	// file directory
+	std::string m_directoryName;
+	std::string m_fileName;
 
 public:
 	PMXModel(const char* directory, const char* fileName);

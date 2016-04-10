@@ -41,3 +41,6 @@ void convert2Str(char* dest, const wchar_t* src);
 #define TEST_SIZURU
 
 #define M_PI 3.14159265359
+
+// DirectXŒn‚Ì‰ð•úƒ}ƒNƒ‚Å‚·B
+#define SAFE_RELEASE(x) if (x){ x->Release(); x = 0; }

@@ -1,12 +1,13 @@
 #pragma once
 #include "SceneBase.h"
 
-class PMXModel;
+
+class Oniko;
 
 class PlayScene :
 	public SceneBase
 {
-	PMXModel* m_pmx;
+	Oniko* m_oniko = NULL;
 
 public:
 	PlayScene();

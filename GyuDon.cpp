@@ -5,8 +5,6 @@
 #include "SceneBase.h"
 #include "SceneManager.h"
 
-// DirectXŒn‚Ì‰ð•úƒ}ƒNƒ‚Å‚·B
-#define SAFE_RELEASE(x) if (x){ x->Release(); x; }
 
 
 GyuDon::GyuDon()
@@ -160,6 +158,9 @@ HRESULT GyuDon::InitD3D()
 	m_pDeviceContext->RSSetState(pIr);
 	SAFE_RELEASE(pIr);
 
+	m_DirectionLight = D3DXVECTOR3(0, -0.5, 0.5);
+	D3DXVec3Normalize(&m_DirectionLight, &m_DirectionLight);
+
 	return S_OK;
 }
 
@@ -217,4 +218,11 @@ const D3DXVECTOR3& GyuDon::vLookatPt(){
 }
 const D3DXVECTOR3& GyuDon::vUpVec(){
 	return m_vUpVec;
+}
+
+const D3DXVECTOR3& GyuDon::getDirectionLight(){
+	return m_DirectionLight;
+}
+void GyuDon::setDirectionLight(const D3DXVECTOR3& dir){
+	m_DirectionLight = dir;
 }
