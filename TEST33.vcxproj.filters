@@ -17,6 +17,12 @@
     <Filter Include="shader">
       <UniqueIdentifier>{9adf31c7-affa-478f-a837-282a44075d3e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="oniko">
+      <UniqueIdentifier>{a2914aa7-2fca-4496-b211-82ad86d290c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="oniko\cpp">
+      <UniqueIdentifier>{3ceacb4c-9f67-4c96-80ee-b265d5f0d1d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\MikuMikuFormats\EncodingHelper.h">
@@ -35,7 +41,6 @@
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="ApiMiku.h" />
-    <ClInclude Include="Oniko.h" />
     <ClInclude Include="Ref.h" />
     <ClInclude Include="AutoReleasePool.h" />
     <ClInclude Include="Director.h" />
@@ -55,6 +60,9 @@
     <ClInclude Include="NomalModel.h" />
     <ClInclude Include="MySTL.h" />
     <ClInclude Include="ModelDaiturenShoturen.h" />
+    <ClInclude Include="Oniko.h">
+      <Filter>oniko</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MAIN.cpp">
@@ -67,7 +75,6 @@
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="ApiMiku.cpp" />
-    <ClCompile Include="Oniko.cpp" />
     <ClCompile Include="Ref.cpp" />
     <ClCompile Include="AutoReleasePool.cpp" />
     <ClCompile Include="Director.cpp" />
@@ -85,6 +92,21 @@
     <ClCompile Include="MTLFileModelMaterial.cpp" />
     <ClCompile Include="NomalModel.cpp" />
     <ClCompile Include="ModelDaiturenShoturen.cpp" />
+    <ClCompile Include="Oniko.cpp">
+      <Filter>oniko\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="OnikoBody.cpp">
+      <Filter>oniko\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="OnikoDaituuren.cpp">
+      <Filter>oniko\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="OnikoDraw.cpp">
+      <Filter>oniko</Filter>
+    </ClCompile>
+    <ClCompile Include="OnikoInit.cpp">
+      <Filter>oniko</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="pmxVertex.hlsl">

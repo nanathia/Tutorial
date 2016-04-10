@@ -142,6 +142,10 @@
     <ClCompile Include="OBJFileModelMesh.cpp" />
     <ClCompile Include="OBJModelFile.cpp" />
     <ClCompile Include="Oniko.cpp" />
+    <ClCompile Include="OnikoBody.cpp" />
+    <ClCompile Include="OnikoDaituuren.cpp" />
+    <ClCompile Include="OnikoDraw.cpp" />
+    <ClCompile Include="OnikoInit.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PMXModel.cpp" />
     <ClCompile Include="Ref.cpp" />
