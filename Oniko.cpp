@@ -15,6 +15,6 @@ Oniko::~Oniko()
 }
 
 void Oniko::draw(){
-	//m_human->draw();
+	m_human->draw();
 	m_katana->draw();
 }

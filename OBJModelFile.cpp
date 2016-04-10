@@ -6,12 +6,6 @@
 
 namespace obj{
 
-	namespace{
-		const DWORD POS = D3DFVF_XYZ;
-		const DWORD NOMAL = D3DFVF_NORMAL;
-		const DWORD TEX = D3DFVF_TEX0;
-	}
-
 	OBJModelFile::OBJModelFile()
 	{
 	}
@@ -26,6 +20,7 @@ namespace obj{
 		m_directoryName = directory;
 		// データ読み込み
 		OBJDataLoadAndSetting();
+		int i = 0;
 	}
 
 	// 頂点を一つ読む

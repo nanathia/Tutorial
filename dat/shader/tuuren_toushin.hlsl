@@ -6,8 +6,9 @@ cbuffer global
 	matrix g_mW;//ワールド行列
 	matrix g_mWVP; //ワールドから射影までの変換行列
 	float4 g_vLightDir;//ライトの方向ベクトル
-	float4 g_Diffuse = float4(1, 0, 0, 0); //拡散反射(色）	
+	float4 g_Diffuse = float4(1, 0, 0, 1); //拡散反射(色）	
 	float4 g_vEye;	//カメラ（視点）
+	float4 test;
 };
 
 //構造体
@@ -33,6 +34,7 @@ VS_OUTPUT VS(float4 Pos : POSITION, float4 Normal : NORMAL, float2 UV : TEXCOORD
 
 	float3 PosWorld = mul(Pos, g_mW);
 	output.EyeVector = g_vEye - PosWorld;
+	output.UV = UV;
 
 	return output;
 }
@@ -49,10 +51,10 @@ float4 PS(VS_OUTPUT input) : SV_Target
 	float3 Normal = normalize(input.Normal);
 	float3 LightDir = normalize(input.Light);
 	float3 ViewDir = normalize(input.EyeVector);
-	float4 NL = saturate(dot(Normal, LightDir));
+	float4 NL = dot(Normal, LightDir);
 
 	float3 Reflect = normalize(2 * NL * Normal - LightDir);
 	float4 specular = 2 * pow(saturate(dot(Reflect, ViewDir)), 8);
 
-	return g_Diffuse * NL + specular;
+	return 0.5 * g_Diffuse * g_textureDecal.Sample(g_textureSampler, input.UV) + specular*2;
 }

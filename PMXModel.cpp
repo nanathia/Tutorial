@@ -212,7 +212,7 @@ void PMXModel::draw(){
 					cb.edgeColor = m_model.materials[i].edge_color;
 					cb.edgeSize = m_model.materials[i].edge_size;
 					cb.fSphereMode = m_model.materials[i].sphere_op_mode;
-					cb.lightDirection = Director::instance()->framework()->getDirectionLight();
+					//cb.lightDirection = Director::instance()->framework()->getDirectionLight();
 					cb.isEdge = m_model.materials[i].flag;
 					cb.lightDirection = D3DXVECTOR3(0, -0.5, 0.5);
 					D3DXVec3Normalize(&cb.lightDirection, &cb.lightDirection);

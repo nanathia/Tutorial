@@ -50,7 +50,13 @@ void ModelDaiturenShoturen::draw(){
 	const D3DXMATRIX& viewMat = Director::instance()->framework()->viewMat();
 	// 
 	D3DXMATRIX mWorld;
-	D3DXMatrixRotationY(&mWorld, timeGetTime() / 1000.0f);
+	D3DXMATRIX rota;
+	D3DXMATRIX scale;
+	D3DXMATRIX trance;
+	D3DXMatrixTranslation(&trance, 1.f, 5.f, 1.f);
+	D3DXMatrixScaling(&scale, 3.f, 3.f, 3.f);
+	D3DXMatrixRotationY(&rota, timeGetTime() / 1000.0f);
+	mWorld = scale * rota * trance;
 
 	float val = timeGetTime() / 1000.0f;
 	const D3DXVECTOR3& vEyePt = Director::instance()->framework()->vEyePt();
@@ -84,17 +90,18 @@ void ModelDaiturenShoturen::draw(){
 			cb.g_vEye.x = Director::instance()->framework()->vEyePt().x;
 			cb.g_vEye.y = Director::instance()->framework()->vEyePt().y;
 			cb.g_vEye.z = Director::instance()->framework()->vEyePt().z;
-			cb.g_vEye.w = 0.f;
+			cb.g_vEye.w = 1.f;
 			cb.g_vLightDir.x = Director::instance()->framework()->getDirectionLight().x;
 			cb.g_vLightDir.y = Director::instance()->framework()->getDirectionLight().y;
 			cb.g_vLightDir.z = Director::instance()->framework()->getDirectionLight().z;
 			cb.g_vLightDir.w = 0.f;
+			cb.g_Diffuse = D3DXVECTOR4(1.f, 1.f, 1.f, 1.f);
 
 			memcpy_s(pData.pData, pData.RowPitch, (void*)&cb, sizeof(CONSTANT_BUFFER_TOUSHIN));
 			deviceContext->Unmap(m_pVSConstantBuffer, 0);
 		}
 		deviceContext->VSSetConstantBuffers(0, 1, &m_pVSConstantBuffer);
-		deviceContext->PSSetConstantBuffers(0, 1, &m_pPSConstantBuffer);
+		deviceContext->PSSetConstantBuffers(0, 1, &m_pVSConstantBuffer);
 
 		deviceContext->DrawIndexed(m_daiturenFile.getVertexIndex().size(), 0, 0);
 	}
@@ -139,7 +146,7 @@ void ModelDaiturenShoturen::CreateTexture(){
 }
 
 void ModelDaiturenShoturen::CreateDaituren(){
-	m_daiturenFile.Load("dat/obj/test", "1");
+	m_daiturenFile.Load("dat/obj/tuuren", "katana");
 
 	ID3D11Device* device = Director::instance()->framework()->device();
 	ID3D11DeviceContext* deviceContext = Director::instance()->framework()->deviceContext();
@@ -240,6 +247,7 @@ void ModelDaiturenShoturen::CreateToushinShader(){
 		HALT(h);
 	}
 
+	pCompiledShader->Release();
 	if (FAILED(D3DX11CompileFromFile("dat/shader/tuuren_toushin.hlsl", NULL, NULL, "PS", "ps_5_0", 0, 0, NULL, &pCompiledShader, &pErrors, NULL)))
 	{
 		MessageBox(0, "hlsl読み込み失敗", NULL, MB_OK);
@@ -253,7 +261,6 @@ void ModelDaiturenShoturen::CreateToushinShader(){
 		MessageBox(0, "ピクセルシェーダー作成失敗", NULL, MB_OK);
 		HALT(h);
 	}
-	SAFE_RELEASE(pCompiledShader);
 
 	{
 		int csize = sizeof(CONSTANT_BUFFER_TOUSHIN);
@@ -275,25 +282,25 @@ void ModelDaiturenShoturen::CreateToushinShader(){
 		}
 	}
 
-	{
-		int csize = sizeof(CONSTANT_BUFFER_TOUSHIN);
-		int amari = csize % 16;
-		if (amari != 0){
-			csize += 16 - amari;
-		}
-		D3D11_BUFFER_DESC cb;
-		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cb.ByteWidth = csize;
-		cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		cb.MiscFlags = 0;
-		cb.StructureByteStride = 0;
-		cb.Usage = D3D11_USAGE_DYNAMIC;
-		HRESULT hr;
-		if (FAILED(hr = device->CreateBuffer(&cb, NULL, &m_pPSConstantBuffer)))
-		{
-			HALT(h);
-		}
-	}
+	//{
+	//	int csize = sizeof(CONSTANT_BUFFER_TOUSHIN);
+	//	int amari = csize % 16;
+	//	if (amari != 0){
+	//		csize += 16 - amari;
+	//	}
+	//	D3D11_BUFFER_DESC cb;
+	//	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	//	cb.ByteWidth = csize;
+	//	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//	cb.MiscFlags = 0;
+	//	cb.StructureByteStride = 0;
+	//	cb.Usage = D3D11_USAGE_DYNAMIC;
+	//	HRESULT hr;
+	//	if (FAILED(hr = device->CreateBuffer(&cb, NULL, &m_pPSConstantBuffer)))
+	//	{
+	//		HALT(h);
+	//	}
+	//}
 }
 void ModelDaiturenShoturen::CreateSayaShader(){
 }
