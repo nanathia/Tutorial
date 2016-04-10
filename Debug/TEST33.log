@@ -1,8 +1,8 @@
-﻿2016/04/10 14:45:02 にビルドを開始しました。
+﻿2016/04/10 15:31:13 にビルドを開始しました。
      1>ノード 2 上のプロジェクト "C:\Users\tpmk9_000\AppData\Local\GitHub\TutorialRepository_a66c3719071da6d865a984bb8d6bfb5bcd775ec8\new-repo\TEST33.vcxproj" (Build ターゲット)。
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Oniko.cpp
-         Oniko.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ModelDaiturenShoturen.cpp
+         ModelDaiturenShoturen.cpp
      1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(12): warning C4005: 'DXGI_STATUS_OCCLUDED' : マクロが再定義されました。
                  c:\program files (x86)\windows kits\8.1\include\shared\winerror.h(50092) : 'DXGI_STATUS_OCCLUDED' の前の定義を確認してください
      1>c:\program files (x86)\microsoft directx sdk (june 2010)\include\dxgitype.h(13): warning C4005: 'DXGI_STATUS_CLIPPED' : マクロが再定義されました。
@@ -87,4 +87,4 @@
 
 ビルドに成功しました。
 
-経過時間 00:00:01.76
+経過時間 00:00:01.85

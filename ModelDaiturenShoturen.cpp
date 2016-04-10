@@ -21,7 +21,6 @@ namespace{
 
 ModelDaiturenShoturen::ModelDaiturenShoturen()
 {
-	return;
 	CreateTexture();
 	CreateToushinShader();
 	CreateSayaShader();
@@ -45,7 +44,6 @@ ModelDaiturenShoturen::~ModelDaiturenShoturen()
 
 
 void ModelDaiturenShoturen::draw(){
-	return;
 	ID3D11Device* device = Director::instance()->framework()->device();
 	ID3D11DeviceContext* deviceContext = Director::instance()->framework()->deviceContext();
 	const D3DXMATRIX& projMat = Director::instance()->framework()->projMat();

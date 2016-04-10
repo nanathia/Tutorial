@@ -6,7 +6,7 @@
 #include "SceneManager.h"
 #include "PlayScene.h"
 
-Director* Director::m_instance = 0;
+Director* Director::m_instance = NULL;
 
 
 Director::Director()
@@ -19,7 +19,8 @@ Director::Director()
 Director::~Director()
 {
 	// ÅŒã‚É‚±‚ê
-	SAFE_DELETE(m_autoRelease);
+	delete m_autoRelease;
+	m_autoRelease = 0;
 }
 
 void Director::create(){
@@ -40,7 +41,9 @@ void Director::destroy(){
 	ASSERT(m_instance && "Director‚ª‚ ‚è‚Ü‚¹‚ñ‚ªíœ‚µ‚æ‚¤‚Æ‚µ‚Ü‚µ‚½B");
 
 	m_instance->m_framework->release();
+	m_instance->m_framework = 0;
 	m_instance->m_scene->release();
+	m_instance->m_framework = 0;
 
 	SAFE_DELETE(m_instance);
 }
