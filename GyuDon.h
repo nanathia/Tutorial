@@ -59,6 +59,8 @@ public:
 	ID3D11Device* device();
 	ID3D11DeviceContext* deviceContext();
 
+	float delta();
+
 private:
 	HWND m_hWnd = NULL;
 	ID3D11Device* m_pDevice = NULL;
@@ -74,6 +76,10 @@ private:
 	D3DXVECTOR3 m_vEyePt;
 	D3DXVECTOR3 m_vLookatPt;
 	D3DXVECTOR3 m_vUpVec;
+
+	// 差分
+	float m_delta = 0.f;
+	DWORD m_preTime = 0.f;
 
 	// ディレクションライト方向はプロジェクト全てで共通
 	D3DXVECTOR3 m_DirectionLight = D3DXVECTOR3(0.f, 1.f, 0.f);

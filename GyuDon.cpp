@@ -67,7 +67,7 @@ LRESULT GyuDon::MsgProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 void GyuDon::Loop()
 {
 	MSG msg = { 0 };
-	DWORD pre = timeGetTime();
+	DWORD m_preTime = timeGetTime();
 	ZeroMemory(&msg, sizeof(msg));
 
 	while (msg.message != WM_QUIT)
@@ -79,17 +79,23 @@ void GyuDon::Loop()
 		}
 		else
 		{
-			App();
-			while (pre + 16 > timeGetTime()){
+			while (m_preTime + 16 > timeGetTime()){
 				Sleep(1);
 			}
-			pre = timeGetTime();
+			m_delta = (timeGetTime() - m_preTime) / 1000.f;
+			if (m_delta >= 1.f){
+				m_delta = 0.f;
+			}
+			m_preTime = timeGetTime();
+			App();
 		}
 	}
 }
 
 void GyuDon::App()
 {
+	while (m_preTime + 16 < 1.f){
+	}
 	Director::instance()->scene()->update();
 	Director::instance()->autoReleasePool()->update();
 	Render();
@@ -186,8 +192,8 @@ void GyuDon::Render()
 	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-	m_vEyePt = D3DXVECTOR3(0.0f, 10.0f, -15.0f);
-	m_vLookatPt = D3DXVECTOR3(0.0f, 5.0f, 0.0f);
+	m_vEyePt = D3DXVECTOR3(0.0f, 15.0f, -20.0f);
+	m_vLookatPt = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 	m_vUpVec = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	D3DXMatrixLookAtLH(&m_viewMat, &m_vEyePt, &m_vLookatPt, &m_vUpVec);
 
@@ -225,4 +231,8 @@ const D3DXVECTOR3& GyuDon::getDirectionLight(){
 }
 void GyuDon::setDirectionLight(const D3DXVECTOR3& dir){
 	m_DirectionLight = dir;
+}
+
+float GyuDon::delta(){
+	return m_delta;
 }

@@ -284,6 +284,26 @@ namespace pmx
 	class PmxBone
 	{
 	public:
+		enum BONE_FLAG{
+			FLAG_CONNECT = 0x0001, // : 接続先(PMD子ボーン指定)表示方法 -> 0 : 座標オフセットで指定 1 : ボーンで指定
+
+			FLAG_ROTATE = 0x0002, // : 回転可能
+			FLAG_TRANCELATE = 0x0004, // : 移動可能
+			FLAG_VISIBLE = 0x0008, // : 表示
+			FLAG_OPARATION = 0x0010, // : 操作可
+
+			FLAG_IK = 0x0020, // : IK
+
+			FLAG_LOCAL_PLUS = 0x0080, // : ローカル付与 | 付与対象 0 : ユーザー変形値／IKリンク／多重付与 1 : 親のローカル変形量
+			FLAG_ROTATE_PLUS = 0x0100, // : 回転付与
+			FLAG_TRANCE_PLUS = 0x0200, // : 移動付与
+
+			FLAG_LOCK_AXIS = 0x0400, // : 軸固定
+			FLAG_LOCAL_AXIS = 0x0800, // : ローカル軸
+
+			FLAG_KINEMATIC = 0x1000, // : 物理後変形
+			FLAG_NAZO = 0x2000, // : 外部親変形
+		};
 		PmxBone()
 			: parent_index(0)
 			, level(0)

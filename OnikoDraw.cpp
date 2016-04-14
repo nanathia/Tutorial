@@ -3,6 +3,10 @@
 #include "GyuDon.h"
 #include "Director.h"
 #include "TGATexture.h"
+#include "VMDMotion.h"
+#include "INCLUDES.h"
+
+int testCount = 0;
 
 void Oniko::draw(){
 	ID3D11Device* device = Director::instance()->framework()->device();
@@ -11,10 +15,13 @@ void Oniko::draw(){
 	const D3DXMATRIX& viewMat = Director::instance()->framework()->viewMat();
 	// テスト用
 	D3DXMATRIX mWorld;
-	D3DXMatrixRotationY(&mWorld, timeGetTime() / 1000.0f);
+	//float val = timeGetTime() / 1000.f;
+	float val = 0.f;
+	D3DXMatrixRotationY(&mWorld, val);
 
-	float val = timeGetTime() / 1000.0f;
 	const D3DXVECTOR3& vEyePt = Director::instance()->framework()->vEyePt();
+
+#pragma region body
 
 	deviceContext->VSSetShader(m_Body.m_pVertexShader, NULL, 0);
 	deviceContext->PSSetShader(m_Body.m_pPixelShader, NULL, 0);
@@ -23,18 +30,31 @@ void Oniko::draw(){
 	deviceContext->PSSetSamplers(0, 3, m_Body.m_pSamplerState);
 
 	D3DXMATRIX testRota;
-	D3DXMatrixRotationAxis(&testRota, &D3DXVECTOR3(1.f, 0.f, 0.f), timeGetTime()*M_PI / 1000.f);
+	D3DXMatrixRotationAxis(&testRota, &D3DXVECTOR3(0.f, 1.f, 0.f), val*M_PI);
+
+	// モーション更新
+	m_testMotion->update();
 
 	// 差分生成。実際に動かしたい値をここで用意しておく。
 	for (int i = 0; i < m_Body.m_model.bone_count; i++){
 		Body::Bone* bone = &m_Body.m_Bones[i];
-		if (bone->id != 10){
-			D3DXMatrixIdentity(&bone->boneMat);
-		}
-		else{
-			bone->boneMat = testRota;
-		}
+		char str[512];
+		convert2Str(str, m_Body.m_model.bones[i].bone_name.c_str());
+		//if (!(m_Body.m_model.bones[i].bone_flag & pmx::PmxBone::FLAG_IK)){
+			// Ikボーン以外
+			m_testMotion->RenderFrameBone(str, &bone->boneMat);
+		//}
 	}
+	// 差分生成。実際に動かしたい値をここで用意しておく。
+	//for (int i = 0; i < m_Body.m_model.bone_count; i++){
+	//	Body::Bone* bone = &m_Body.m_Bones[i];
+	//	char str[512];
+	//	convert2Str(str, m_Body.m_model.bones[i].bone_name.c_str());
+	//	if (m_Body.m_model.bones[i].bone_flag & pmx::PmxBone::FLAG_IK){
+	//		// Ikボーン
+	//		m_testMotion->RenderFrameIKBone(str, &bone->boneMat);
+	//	}
+	//}
 
 	// ボーン情報をレンダリングする。シェーダに渡す形にする。初期姿勢であれば、単位行列になるはずだ。それでテストが出来る。
 	struct BoneToShader{
@@ -46,7 +66,7 @@ void Oniko::draw(){
 			else{
 				bone->boneMat = bone->initMat;
 				bone->combMatAry[bone->id] = bone->offsetMat * bone->boneMat;
-			}
+		}
 			// 親は当然先に計算しなければ意味が無い。ローカルにならない。そして子に波及する。兄弟と子はこの場合順を問わない。
 			if (bone->firstChild){
 				Render(bone->firstChild);
@@ -67,6 +87,8 @@ void Oniko::draw(){
 	//}
 
 	{
+		pmx::PmxBone* parentBone = &m_Body.m_model.bones[m_Daituuren_Toushin.m_parentBone_id];
+
 		// 2016-03-27 pmx 描画
 		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		UINT stride = sizeof(Body::SimpleVertex);
@@ -168,6 +190,7 @@ void Oniko::draw(){
 		}
 	}
 
+#pragma endregion
 
 	//////////////////////////////////////////////////////////////////////////
 	{
@@ -176,16 +199,17 @@ void Oniko::draw(){
 		const D3DXMATRIX& projMat = Director::instance()->framework()->projMat();
 		const D3DXMATRIX& viewMat = Director::instance()->framework()->viewMat();
 		// 
-		D3DXMATRIX mWorld;
+		D3DXMATRIX Sabun;
 		D3DXMATRIX rota;
 		D3DXMATRIX scale;
 		D3DXMATRIX trance;
-		D3DXMatrixTranslation(&trance, 1.f, 5.f, 1.f);
-		D3DXMatrixScaling(&scale, 3.f, 3.f, 3.f);
-		D3DXMatrixRotationY(&rota, timeGetTime() / 1000.0f);
-		mWorld = scale * rota * trance;
+		D3DXMatrixTranslation(&trance, 0.f, 0.f, 0.f);
+		D3DXMatrixScaling(&scale, 1.f, 1.f, 1.f);
+		D3DXMatrixRotationAxis(&rota, &D3DXVECTOR3(1.f, 0.f, 0.f), val);
+		Sabun = scale * rota * trance;
+		m_Daituuren_Toushin.m_bone.boneMat = Sabun * m_Daituuren_Toushin.m_bone.initMat * m_Daituuren_Toushin.m_bone.parent->boneMat;
+		m_Daituuren_Toushin.m_bone.boneMat = m_Daituuren_Toushin.m_bone.parent->offsetMat * m_Daituuren_Toushin.m_bone.boneMat;
 
-		float val = timeGetTime() / 1000.0f;
 		const D3DXVECTOR3& vEyePt = Director::instance()->framework()->vEyePt();
 
 		deviceContext->VSSetShader(m_Daituuren_Toushin.m_pVertexShader, NULL, 0);
@@ -210,9 +234,9 @@ void Oniko::draw(){
 			// バーテクス・ピクセル
 			if (SUCCEEDED(deviceContext->Map(m_Daituuren_Toushin.m_pVSConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData)))
 			{
-				cb.g_mW = mWorld;
+				cb.g_mW = m_Daituuren_Toushin.m_bone.boneMat * mWorld;
 				D3DXMatrixTranspose(&cb.g_mW, &cb.g_mW);
-				cb.g_mWVP = mWorld * viewMat * projMat;
+				cb.g_mWVP = m_Daituuren_Toushin.m_bone.boneMat * mWorld * viewMat * projMat;
 				D3DXMatrixTranspose(&cb.g_mWVP, &cb.g_mWVP);
 				cb.g_vEye.x = Director::instance()->framework()->vEyePt().x;
 				cb.g_vEye.y = Director::instance()->framework()->vEyePt().y;
@@ -233,5 +257,8 @@ void Oniko::draw(){
 			deviceContext->DrawIndexed(m_Daituuren_Toushin.m_daiturenFile.getVertexIndex().size(), 0, 0);
 		}
 	}
+	///////////////////////////////
+
+	testCount++;
 }
 

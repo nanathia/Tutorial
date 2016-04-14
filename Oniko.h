@@ -5,9 +5,13 @@
 #include "OBJModelFile.h"
 
 class ModelDaiturenShoturen;
+class VMDMotion;
 
 class Oniko : public Ref
 {
+	// テストモーションですね。
+	VMDMotion* m_testMotion = 0;
+
 	// お体の部分ですね。
 	struct Body{
 		struct SimpleVertex
@@ -101,6 +105,13 @@ class Oniko : public Ref
 		};
 		// 大通連刀身
 		obj::OBJModelFile m_daiturenFile;
+
+		// お体の中に親ボーン
+		int m_parentBone_id = -1;
+		// 初期姿勢
+		D3DXMATRIX m_InitMat;
+		// 仮想ボーン
+		Body::Bone m_bone;
 
 		// 頂点レイアウト
 		ID3D11InputLayout* m_pVertexLayout = NULL;

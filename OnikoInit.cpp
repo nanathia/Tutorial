@@ -5,68 +5,8 @@
 
 void Oniko::init(){
 
-	m_Daituuren_Toushin.m_daiturenFile.Load("dat/obj/tuuren", "katana");
-
 	ID3D11Device* device = Director::instance()->framework()->device();
 	ID3D11DeviceContext* deviceContext = Director::instance()->framework()->deviceContext();
-
-	// vertex
-	{
-		Daituuren_Toushin::SimpleVertex* vertices = new Daituuren_Toushin::SimpleVertex[m_Daituuren_Toushin.m_daiturenFile.vertexSize()];
-		for (int i = 0; i < m_Daituuren_Toushin.m_daiturenFile.vertexSize(); i++){
-			vertices[i].position.x = m_Daituuren_Toushin.m_daiturenFile.getPosition()[i].x;
-			vertices[i].position.y = m_Daituuren_Toushin.m_daiturenFile.getPosition()[i].y;
-			vertices[i].position.z = m_Daituuren_Toushin.m_daiturenFile.getPosition()[i].z;
-			vertices[i].position.w = 1.f;
-			vertices[i].normal.x = m_Daituuren_Toushin.m_daiturenFile.getNormal()[i].x;
-			vertices[i].normal.y = m_Daituuren_Toushin.m_daiturenFile.getNormal()[i].y;
-			vertices[i].normal.z = m_Daituuren_Toushin.m_daiturenFile.getNormal()[i].z;
-			vertices[i].uv.x = m_Daituuren_Toushin.m_daiturenFile.getUV()[i].x;
-			vertices[i].uv.y = m_Daituuren_Toushin.m_daiturenFile.getUV()[i].y;
-		}
-
-		//D3D11_BUFFER_DESC bd;
-		//bd.Usage = D3D11_USAGE_DEFAULT;
-		//bd.ByteWidth = sizeof(Daituuren_Toushin::SimpleVertex) * m_Daituuren_Toushin.m_daiturenFile.vertexSize();
-		//bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		//bd.CPUAccessFlags = 0;
-		//bd.MiscFlags = 0;
-
-		//D3D11_SUBRESOURCE_DATA InitData;
-		//InitData.pSysMem = vertices;
-
-		//if (FAILED(device->CreateBuffer(&bd, &InitData, &m_Daituuren_Toushin.m_pVertexBuffer)))
-		//{
-		//	delete[] vertices;
-		//	HALT(h);
-		//}
-		delete[] vertices;
-
-	}
-
-	// index
-	{
-		unsigned* indecies = new unsigned[m_Daituuren_Toushin.m_daiturenFile.vertexIndexSize()];
-		for (int i = 0; i < m_Daituuren_Toushin.m_daiturenFile.vertexIndexSize(); i++){
-			indecies[i] = m_Daituuren_Toushin.m_daiturenFile.getVertexIndex()[i];
-		}
-		D3D11_BUFFER_DESC bd;
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(unsigned) * m_Daituuren_Toushin.m_daiturenFile.vertexIndexSize();
-		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		bd.CPUAccessFlags = 0;
-		bd.MiscFlags = 0;
-
-		D3D11_SUBRESOURCE_DATA InitData;
-		InitData.pSysMem = indecies;
-
-		if (FAILED(device->CreateBuffer(&bd, &InitData, &m_Daituuren_Toushin.m_pIndexBuffer)))
-		{
-			delete[] indecies;
-			HALT(h);
-		}
-		delete[] indecies;
-	}
 
 	///////////////////////////////////////////////////////////////////////
 	ASSERT(m_Body.m_model.bone_count <= 512 && "非対応ボーン数");
@@ -133,6 +73,90 @@ void Oniko::init(){
 #endif
 
 
+////////////////////////////////////////////////////////////////////////////
+
+	//pmx::PmxBone test = m_body
+
+	m_Daituuren_Toushin.m_daiturenFile.Load("dat/obj/tuuren", "katana");
+
+	// お体の50番が中指
+	m_Daituuren_Toushin.m_parentBone_id = 50;
+	// 親ボーン
+	pmx::PmxBone* parentBone = &m_Body.m_model.bones[m_Daituuren_Toushin.m_parentBone_id];
+	// 初期姿勢はとりあ親と被す
+	D3DXMatrixIdentity(&m_Daituuren_Toushin.m_InitMat);
+
+	// vertex
+	{
+		Daituuren_Toushin::SimpleVertex* vertices = new Daituuren_Toushin::SimpleVertex[m_Daituuren_Toushin.m_daiturenFile.vertexSize()];
+		for (int i = 0; i < m_Daituuren_Toushin.m_daiturenFile.vertexSize(); i++){
+			vertices[i].position.x = m_Daituuren_Toushin.m_daiturenFile.getPosition()[i].x;
+			vertices[i].position.y = m_Daituuren_Toushin.m_daiturenFile.getPosition()[i].y;
+			vertices[i].position.z = m_Daituuren_Toushin.m_daiturenFile.getPosition()[i].z;
+			vertices[i].position.w = 1.f;
+			vertices[i].normal.x = m_Daituuren_Toushin.m_daiturenFile.getNormal()[i].x;
+			vertices[i].normal.y = m_Daituuren_Toushin.m_daiturenFile.getNormal()[i].y;
+			vertices[i].normal.z = m_Daituuren_Toushin.m_daiturenFile.getNormal()[i].z;
+			vertices[i].uv.x = m_Daituuren_Toushin.m_daiturenFile.getUV()[i].x;
+			vertices[i].uv.y = m_Daituuren_Toushin.m_daiturenFile.getUV()[i].y;
+		}
+		D3DXMATRIX InitTrance;
+		// 付けたいとこまで持ってく
+		D3DXMatrixTranslation(&InitTrance, parentBone->position[0]+0.1f, parentBone->position[1]-0.1f, parentBone->position[2]);
+		// サイズ調整
+		D3DXMATRIX InitScale;
+		D3DXMatrixScaling(&InitScale, 1.8f, 1.8f, 1.8f);
+		D3DXMATRIX InitRota;
+		D3DXMatrixRotationAxis(&InitRota, &D3DXVECTOR3(1.f, 0.f, 0.f), 1.f * M_PI);
+		D3DXMATRIX InitMat = InitScale*InitRota*InitTrance;
+		for (int i = 0; i < m_Daituuren_Toushin.m_daiturenFile.vertexSize(); i++){
+			D3DXVec3TransformCoord(reinterpret_cast<D3DXVECTOR3*>(&vertices[i].position), reinterpret_cast<D3DXVECTOR3*>(&vertices[i].position), &InitMat);
+		}
+		D3DXMatrixInverse(&m_Daituuren_Toushin.m_bone.offsetMat, 0, &InitMat);
+		m_Daituuren_Toushin.m_bone.initMat = InitMat*m_Body.m_Bones[m_Daituuren_Toushin.m_parentBone_id].offsetMat;
+		m_Daituuren_Toushin.m_bone.parent = &m_Body.m_Bones[m_Daituuren_Toushin.m_parentBone_id];
+
+		D3D11_BUFFER_DESC bd;
+		bd.Usage = D3D11_USAGE_DEFAULT;
+		bd.ByteWidth = sizeof(Daituuren_Toushin::SimpleVertex) * m_Daituuren_Toushin.m_daiturenFile.vertexSize();
+		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		bd.CPUAccessFlags = 0;
+		bd.MiscFlags = 0;
+
+		D3D11_SUBRESOURCE_DATA InitData;
+		InitData.pSysMem = vertices;
+
+		if (FAILED(device->CreateBuffer(&bd, &InitData, &m_Daituuren_Toushin.m_pVertexBuffer)))
+		{
+			delete[] vertices;
+			HALT(h);
+		}
+		delete[] vertices;
+
+	}
 
 
+	// index
+	{
+		unsigned* indecies = new unsigned[m_Daituuren_Toushin.m_daiturenFile.vertexIndexSize()];
+		for (int i = 0; i < m_Daituuren_Toushin.m_daiturenFile.vertexIndexSize(); i++){
+			indecies[i] = m_Daituuren_Toushin.m_daiturenFile.getVertexIndex()[i];
+		}
+		D3D11_BUFFER_DESC bd;
+		bd.Usage = D3D11_USAGE_DEFAULT;
+		bd.ByteWidth = sizeof(unsigned) * m_Daituuren_Toushin.m_daiturenFile.vertexIndexSize();
+		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		bd.CPUAccessFlags = 0;
+		bd.MiscFlags = 0;
+
+		D3D11_SUBRESOURCE_DATA InitData;
+		InitData.pSysMem = indecies;
+
+		if (FAILED(device->CreateBuffer(&bd, &InitData, &m_Daituuren_Toushin.m_pIndexBuffer)))
+		{
+			delete[] indecies;
+			HALT(h);
+		}
+		delete[] indecies;
+	}
 }

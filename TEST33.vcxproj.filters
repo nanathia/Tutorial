@@ -63,6 +63,7 @@
     <ClInclude Include="Oniko.h">
       <Filter>oniko</Filter>
     </ClInclude>
+    <ClInclude Include="VMDMotion.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MAIN.cpp">
@@ -101,12 +102,13 @@
     <ClCompile Include="OnikoDaituuren.cpp">
       <Filter>oniko\cpp</Filter>
     </ClCompile>
-    <ClCompile Include="OnikoDraw.cpp">
-      <Filter>oniko</Filter>
-    </ClCompile>
     <ClCompile Include="OnikoInit.cpp">
-      <Filter>oniko</Filter>
+      <Filter>oniko\cpp</Filter>
     </ClCompile>
+    <ClCompile Include="OnikoDraw.cpp">
+      <Filter>oniko\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="VMDMotion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="pmxVertex.hlsl">

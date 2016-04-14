@@ -3,8 +3,8 @@
 //グローバル
 cbuffer global
 {
-	matrix g_mW;//ワールド行列
-	matrix g_mWVP; //ワールドから射影までの変換行列
+	float4x4 g_mW;//ワールド行列
+	float4x4 g_mWVP; //ワールドから射影までの変換行列
 	float4 g_vLightDir;//ライトの方向ベクトル
 	float4 g_Diffuse = float4(1, 0, 0, 1); //拡散反射(色）	
 	float4 g_vEye;	//カメラ（視点）
@@ -57,4 +57,5 @@ float4 PS(VS_OUTPUT input) : SV_Target
 	float4 specular = 2 * pow(saturate(dot(Reflect, ViewDir)), 8);
 
 	return 0.5 * g_Diffuse * g_textureDecal.Sample(g_textureSampler, input.UV) + specular*2;
+	//return g_Diffuse;
 }

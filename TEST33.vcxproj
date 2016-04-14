@@ -124,6 +124,7 @@
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="TGATexture.h" />
+    <ClInclude Include="VMDMotion.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApiMiku.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="TGATexture.cpp" />
+    <ClCompile Include="VMDMotion.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
