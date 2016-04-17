@@ -14,9 +14,6 @@ GyuDon::GyuDon()
 
 GyuDon::~GyuDon()
 {
-#ifdef TEST_SIZURU
-	OBJECT_RELEASE(m_debugDraw);
-#endif
 	this->DestroyD3D();
 }
 
@@ -177,6 +174,9 @@ HRESULT GyuDon::InitD3D()
 
 void GyuDon::DestroyD3D()
 {
+#ifdef TEST_SIZURU
+	OBJECT_RELEASE(m_debugDraw);
+#endif
 	SAFE_RELEASE(m_pSwapChain);
 	SAFE_RELEASE(m_pRenderTargetView);
 	SAFE_RELEASE(m_pDepthStencilView);
