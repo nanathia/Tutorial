@@ -1,6 +1,7 @@
 #include "VMDMotion.h"
 #include "Director.h"
 #include "GyuDon.h"
+#include "INCLUDES.h"
 
 // とりあ全Lerpで
 
@@ -85,8 +86,20 @@ void VMDMotion::RenderFrameBone(const std::string& boneName, D3DXMATRIX* out){
 	float ratio = frame_inKey / maxFrame_inKey;
 	D3DXVECTOR3 pos;
 	D3DXQUATERNION rota;
-	D3DXVec3Lerp(&pos, reinterpret_cast<D3DXVECTOR3*>(_1->position), reinterpret_cast<D3DXVECTOR3*>(_2->position), ratio);
-	D3DXQuaternionSlerp(&rota, reinterpret_cast<D3DXQUATERNION*>(_1->orientation), reinterpret_cast<D3DXQUATERNION*>(_2->orientation), ratio);
+	float ratioX, ratioY, ratioZ, ratioR;
+	// ベジェ
+	{
+		ratioX = _1->bezieX.GetY(ratio);
+		ratioY = _1->bezieY.GetY(ratio);
+		ratioZ = _1->bezieZ.GetY(ratio);
+		ratioR = _1->bezieR.GetY(ratio);
+	}
+
+	//D3DXVec3Lerp(&pos, reinterpret_cast<D3DXVECTOR3*>(_1->position), reinterpret_cast<D3DXVECTOR3*>(_2->position), ratio);
+	pos.x = Lerp(_1->position[0], _2->position[0], ratioX);
+	pos.y = Lerp(_1->position[1], _2->position[1], ratioY);
+	pos.z = Lerp(_1->position[2], _2->position[2], ratioZ);
+	D3DXQuaternionSlerp(&rota, reinterpret_cast<D3DXQUATERNION*>(_1->orientation), reinterpret_cast<D3DXQUATERNION*>(_2->orientation), ratioR);
 	D3DXMATRIX rotaM;
 	D3DXMatrixRotationQuaternion(&rotaM, &rota);
 	D3DXMATRIX tranceM;

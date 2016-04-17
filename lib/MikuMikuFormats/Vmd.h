@@ -6,6 +6,8 @@
 #include <iostream>
 #include <fstream>
 #include <ostream>
+#include <D3D11.h>
+#include <D3DX10.h>
 
 namespace vmd
 {
@@ -22,7 +24,48 @@ namespace vmd
 		/// ‰ñ“]
 		float orientation[4];
 		/// •âŠÔ‹Èü
-		char interpolation[4][4][4];
+		unsigned char interpolation[4][4][4];
+
+		class Bezie {
+		private:
+			D3DXVECTOR2 p1, p2; /// §Œä“_
+		public:
+			Bezie(){};
+			void Set(unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
+				p1.x = x1 / 127.0f;
+				p1.y = y1 / 127.0f;
+				p2.x = x2 / 127.0f;
+				p2.y = y2 / 127.0f;
+			}
+			float Bezie::GetY(float x) {
+				float t = x;
+				float max_t = 1.0f;
+				float min_t = 0.0f;
+				float val1, val2, val3;
+				static const int N = 8;			// ŒvZŒJ‚è•Ô‚µ‰ñ”
+				for (int i = 0; i < N; i++) {
+					float it = 1.0f - t;
+					val1 = 3.0f * t * it * it;
+					val2 = 3.0f * t * t * it;
+					val3 = t * t * t;
+					float x_diff = x - (val1 * p1.x) - (val2 * p2.x) - val3;
+					if (fabs(x_diff) < 1e-6) break;	// Œë·‚ª’è”ˆÈ“à‚È‚çI—¹
+					if (x_diff > 0) {					// ”ÍˆÍ‚ğ•ÏX‚µ‚ÄÄŒvZ
+						min_t = t;
+						t = ((max_t - t) / 2.0f) + t;
+					}
+					else {
+						max_t = t;
+						t = ((t - min_t) / 2.0f) + min_t;
+					}
+				}
+				return ((val1 * p1.y) + (val2 * p2.y) + val3);
+			}
+		};
+		Bezie bezieX;
+		Bezie bezieY;
+		Bezie bezieZ;
+		Bezie bezieR;
 
 		void Read(std::istream* stream)
 		{
@@ -32,7 +75,12 @@ namespace vmd
 			stream->read((char*) &frame, sizeof(int));
 			stream->read((char*) position, sizeof(float)*3);
 			stream->read((char*) orientation, sizeof(float)*4);
-			stream->read((char*) interpolation, sizeof(char) * 4 * 4 * 4);
+			stream->read((char*) interpolation, sizeof(unsigned char) * 4 * 4 * 4);
+			//unsigned char* ip = (unsigned char*)interpolation;
+			bezieX.Set(interpolation[0][0][0], interpolation[0][1][0], interpolation[0][2][0], interpolation[0][3][0]);
+			bezieY.Set(interpolation[0][0][1], interpolation[0][1][1], interpolation[0][2][1], interpolation[0][3][1]);
+			bezieZ.Set(interpolation[0][0][2], interpolation[0][1][2], interpolation[0][2][2], interpolation[0][3][2]);
+			bezieR.Set(interpolation[0][0][3], interpolation[0][1][3], interpolation[0][2][3], interpolation[0][3][3]);
 		}
 
 		void Write(std::ostream* stream)
@@ -41,7 +89,7 @@ namespace vmd
 			stream->write((char*)&frame, sizeof(int));
 			stream->write((char*)position, sizeof(float) * 3);
 			stream->write((char*)orientation, sizeof(float) * 4);
-			stream->write((char*)interpolation, sizeof(char) * 4 * 4 * 4);
+			stream->write((char*)interpolation, sizeof(unsigned char) * 4 * 4 * 4);
 		}
 	};
 

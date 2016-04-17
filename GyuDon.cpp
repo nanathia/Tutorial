@@ -14,6 +14,9 @@ GyuDon::GyuDon()
 
 GyuDon::~GyuDon()
 {
+#ifdef TEST_SIZURU
+	OBJECT_RELEASE(m_debugDraw);
+#endif
 	this->DestroyD3D();
 }
 
@@ -83,9 +86,9 @@ void GyuDon::Loop()
 				Sleep(1);
 			}
 			m_delta = (timeGetTime() - m_preTime) / 1000.f;
-			if (m_delta >= 1.f){
-				m_delta = 0.f;
-			}
+			//if (m_delta >= 1.f){
+			//	m_delta = 0.f;
+			//}
 			m_preTime = timeGetTime();
 			App();
 		}
@@ -94,8 +97,6 @@ void GyuDon::Loop()
 
 void GyuDon::App()
 {
-	while (m_preTime + 16 < 1.f){
-	}
 	Director::instance()->scene()->update();
 	Director::instance()->autoReleasePool()->update();
 	Render();
@@ -167,6 +168,10 @@ HRESULT GyuDon::InitD3D()
 	m_DirectionLight = D3DXVECTOR3(0, -0.5, 0.5);
 	D3DXVec3Normalize(&m_DirectionLight, &m_DirectionLight);
 
+#ifdef TEST_SIZURU
+	OBJECT_CREATE(m_debugDraw, new DebugDrawer);
+#endif
+
 	return S_OK;
 }
 
@@ -200,6 +205,10 @@ void GyuDon::Render()
 	D3DXMatrixPerspectiveFovLH(&m_projMat, D3DX_PI / 4, (FLOAT)WINDOW_WIDTH / (FLOAT)WINDOW_HEIGHT, 0.1f, 10000.0f);
 
 	Director::instance()->scene()->draw();
+
+#ifdef TEST_SIZURU
+	m_debugDraw->draw();
+#endif
 
 	m_pSwapChain->Present(0, 0);
 }

@@ -9,7 +9,11 @@
 #include <D3DX11.h>
 #include <D3Dcompiler.h>
 #include "lib/MikuMikuFormats//Pmx.h"
+#include "INCLUDES.h"
 #include "Ref.h"
+#ifdef TEST_SIZURU
+#include "DebugDrawer.h"
+#endif
 
 #pragma comment(lib,"winmm.lib")
 #pragma comment(lib,"d3dx10.lib")
@@ -83,5 +87,9 @@ private:
 
 	// ディレクションライト方向はプロジェクト全てで共通
 	D3DXVECTOR3 m_DirectionLight = D3DXVECTOR3(0.f, 1.f, 0.f);
+
+#ifdef TEST_SIZURU
+	DebugDrawer* m_debugDraw = NULL;
+#endif
 };
 

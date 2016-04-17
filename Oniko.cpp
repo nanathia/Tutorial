@@ -16,7 +16,7 @@
 Oniko::Oniko()
 {
 	// test
-	OBJECT_CREATE(m_testMotion, new VMDMotion("dat/vmd/d.vmd", 0.25f));
+	OBJECT_CREATE(m_testMotion, new VMDMotion("dat/vmd/d.vmd", 0.5f));
 
 	m_Body.m_directoryName = "dat/pmx/oniko";
 	m_Body.m_fileName = "“ú–{‹SŽq0.15.pmx";

@@ -64,6 +64,7 @@
       <Filter>oniko</Filter>
     </ClInclude>
     <ClInclude Include="VMDMotion.h" />
+    <ClInclude Include="DebugDrawer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MAIN.cpp">
@@ -109,6 +110,9 @@
       <Filter>oniko\cpp</Filter>
     </ClCompile>
     <ClCompile Include="VMDMotion.cpp" />
+    <ClCompile Include="MyFUNCTION.h" />
+    <ClCompile Include="MyFUNCTION.cpp" />
+    <ClCompile Include="DebugDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="pmxVertex.hlsl">
@@ -118,6 +122,9 @@
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="dat\shader\tuuren_toushin.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="SimpleUIShader.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

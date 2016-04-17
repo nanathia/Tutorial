@@ -40,10 +40,14 @@ void Oniko::draw(){
 		Body::Bone* bone = &m_Body.m_Bones[i];
 		char str[512];
 		convert2Str(str, m_Body.m_model.bones[i].bone_name.c_str());
-		//if (!(m_Body.m_model.bones[i].bone_flag & pmx::PmxBone::FLAG_IK)){
+		if (!(m_Body.m_model.bones[i].bone_flag & pmx::PmxBone::FLAG_IK)){
 			// Ikボーン以外
 			m_testMotion->RenderFrameBone(str, &bone->boneMat);
-		//}
+		}
+		else{
+			pmx::PmxBone* pmxBone = &m_Body.m_model.bones[i];
+			int i = 0;
+		}
 	}
 	// 差分生成。実際に動かしたい値をここで用意しておく。
 	//for (int i = 0; i < m_Body.m_model.bone_count; i++){
