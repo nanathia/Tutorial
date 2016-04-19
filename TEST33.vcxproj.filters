@@ -23,6 +23,9 @@
     <Filter Include="oniko\cpp">
       <UniqueIdentifier>{3ceacb4c-9f67-4c96-80ee-b265d5f0d1d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="debug">
+      <UniqueIdentifier>{5e7d2964-ccac-4c1c-941b-e85d823970ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\MikuMikuFormats\EncodingHelper.h">
@@ -64,7 +67,9 @@
       <Filter>oniko</Filter>
     </ClInclude>
     <ClInclude Include="VMDMotion.h" />
-    <ClInclude Include="DebugDrawer.h" />
+    <ClInclude Include="DebugDrawer.h">
+      <Filter>debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MAIN.cpp">
@@ -112,7 +117,9 @@
     <ClCompile Include="VMDMotion.cpp" />
     <ClCompile Include="MyFUNCTION.h" />
     <ClCompile Include="MyFUNCTION.cpp" />
-    <ClCompile Include="DebugDrawer.cpp" />
+    <ClCompile Include="DebugDrawer.cpp">
+      <Filter>debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="pmxVertex.hlsl">

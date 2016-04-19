@@ -94,9 +94,19 @@ void GyuDon::Loop()
 
 void GyuDon::App()
 {
+#ifdef TEST_SIZURU
+	DWORD startTime = timeGetTime();
+	Director::instance()->scene()->update();
+	DWORD sceneUpdateTime = timeGetTime();
+	Director::instance()->autoReleasePool()->update();
+	DWORD autoReleaseTime = timeGetTime();
+	Render();
+	DWORD renderTime = timeGetTime();
+#else
 	Director::instance()->scene()->update();
 	Director::instance()->autoReleasePool()->update();
 	Render();
+#endif
 }
 
 HRESULT GyuDon::InitD3D()
@@ -232,6 +242,9 @@ const D3DXVECTOR3& GyuDon::vLookatPt(){
 }
 const D3DXVECTOR3& GyuDon::vUpVec(){
 	return m_vUpVec;
+}
+DebugDrawer* GyuDon::debugDrawer(){
+	return m_debugDraw;
 }
 
 const D3DXVECTOR3& GyuDon::getDirectionLight(){

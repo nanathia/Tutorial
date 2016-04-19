@@ -93,6 +93,9 @@ private:
 
 #ifdef TEST_SIZURU
 	DebugDrawer* m_debugDraw = NULL;
+public:
+	DebugDrawer* debugDrawer();
+private:
 #endif
 };
 

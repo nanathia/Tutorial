@@ -34,7 +34,26 @@ DebugDrawer::~DebugDrawer()
 	SAFE_RELEASE(m_pVertexLayout);
 }
 
+void DebugDrawer::AddDebugString(const std::string& str, int order){
+	m_drawStrings.insert(std::pair<int, std::string>(order, str));
+}
+
 void DebugDrawer::Set(int w, int h){
+
+	m_fontHeight = h;
+	m_fontWidth = w;
+
+	{
+		SAFE_RELEASE(m_hpBlendState);
+		SAFE_RELEASE(m_pSamplerState);
+		SAFE_RELEASE(m_pTexture);
+		SAFE_RELEASE(m_pVertexShader);
+		SAFE_RELEASE(m_pPixelShader);
+		SAFE_RELEASE(m_pConstantBuffer);
+		SAFE_RELEASE(m_pIndexBuffer);
+		SAFE_RELEASE(m_pVertexBuffer);
+		SAFE_RELEASE(m_pVertexLayout);
+	}
 
 	ID3D11Device* device = Director::instance()->framework()->device();
 	ID3D11DeviceContext* deviceContext = Director::instance()->framework()->deviceContext();
@@ -260,10 +279,69 @@ void DebugDrawer::draw(){
 		auto renderTarget = Director::instance()->framework()->renderTargetView();
 		deviceContext->OMSetRenderTargets(1, &renderTarget, 0);
 
-		for (int x = 0; x < 26; x++){
-			for (int y = 0; y < 7; y++){
+		//for (int x = 0; x < 26; x++){
+		//	for (int y = 0; y < 7; y++){
+		//		D3DXMATRIX world;
+		//		D3DXMatrixTranslation(&world, 14 * x/2, 28 * y/2, 0);
+		//		world *= projMat;
+		//		D3DXMatrixTranspose(&world, &world);
+		//		D3D11_MAPPED_SUBRESOURCE pData;
+		//		CONSTANT cb;
+		//		if (SUCCEEDED(deviceContext->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData)))
+		//		{
+		//			cb.Diffuse = D3DXVECTOR4(1.f, 1.f, 1.f, 1.f);
+		//			cb.mWVP = world;
+
+		//			memcpy_s(pData.pData, pData.RowPitch, (void*)&cb, sizeof(CONSTANT));
+		//			deviceContext->Unmap(m_pConstantBuffer, 0);
+		//		}
+		//		deviceContext->DrawIndexed(6, (y*26+x) * 6, 0);
+		//	}
+		//}
+		int maxWidth = 0;
+		int maxHeight = 0;
+		int currentY = 0;
+		int currentX = 0;
+		for (auto it = m_drawStrings.begin(); it != m_drawStrings.end(); it++){
+			currentX = 0;
+			for (int i = 0; i < it->second.size(); i++){
+				char c = it->second[i];
+				int x = 0;
+				int y = 0;
+				if (c >= ' ' && c <= '/'){
+					y = 0;
+					x = c - ' ';
+				}
+				else if (c >= '0' && c <= '9'){
+					y = 1;
+					x = c - '0';
+				}
+				else if (c >= ':' && c <= '@'){
+					y = 2;
+					x = c - ':';
+				}
+				else if (c >= 'A' && c <= 'Z'){
+					y = 3;
+					x = c - 'A';
+				}
+				else if (c >= '[' && c <= '`'){
+					y = 4;
+					x = c - '[';
+				}
+				else if (c >= 'a' && c <= 'z'){
+					y = 5;
+					x = c - 'a';
+				}
+				else if (c >= '{' && c <= '~'){
+					y = 6;
+					x = c - '{';
+				}
+				else{
+					continue;
+				}
+
 				D3DXMATRIX world;
-				D3DXMatrixTranslation(&world, 14 * x/2, 28 * y/2, 0);
+				D3DXMatrixTranslation(&world, (float)currentX, (float)currentY, 0);
 				world *= projMat;
 				D3DXMatrixTranspose(&world, &world);
 				D3D11_MAPPED_SUBRESOURCE pData;
@@ -277,8 +355,14 @@ void DebugDrawer::draw(){
 					deviceContext->Unmap(m_pConstantBuffer, 0);
 				}
 				deviceContext->DrawIndexed(6, (y*26+x) * 6, 0);
+
+
+				currentX += m_fontWidth;
 			}
+			currentY += m_fontHeight;
 		}
+		m_drawStrings.clear();
+		if(
 	}
 
 }

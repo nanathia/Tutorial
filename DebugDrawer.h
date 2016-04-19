@@ -3,7 +3,8 @@
 #include <D3D11.h>
 #include <D3DX10.h>
 #include <D3DX11.h>
-
+#include <map>
+#include <list>
 
 class DebugDrawer :
 	public Ref
@@ -20,12 +21,17 @@ class DebugDrawer :
 	//ブレンディングステート生成
 	ID3D11BlendState* m_hpBlendState = NULL;
 
+	std::multimap<int, std::string> m_drawStrings;
+
+	int m_fontWidth = -1;
+	int m_fontHeight = -1;
+
 public:
 	DebugDrawer();
 	~DebugDrawer();
 
 	void Set(int fontWidth, int fontHeight);
+	void AddDebugString(const std::string& str, int order = 0);
 
 	void draw();
 };
-
