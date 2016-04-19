@@ -143,8 +143,6 @@ HRESULT GyuDon::InitD3D()
 	m_pDevice->CreateTexture2D(&descDepth, NULL, &m_pDepthStencil);
 	m_pDevice->CreateDepthStencilView(m_pDepthStencil, NULL, &m_pDepthStencilView);
 
-	m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
-
 	D3D11_VIEWPORT vp;
 	vp.Width = WINDOW_WIDTH;
 	vp.Height = WINDOW_HEIGHT;
@@ -167,6 +165,7 @@ HRESULT GyuDon::InitD3D()
 
 #ifdef TEST_SIZURU
 	OBJECT_CREATE(m_debugDraw, new DebugDrawer);
+	m_debugDraw->Set(14, 28);
 #endif
 
 	return S_OK;
@@ -240,6 +239,13 @@ const D3DXVECTOR3& GyuDon::getDirectionLight(){
 }
 void GyuDon::setDirectionLight(const D3DXVECTOR3& dir){
 	m_DirectionLight = dir;
+}
+
+ID3D11RenderTargetView* GyuDon::renderTargetView(){
+	return m_pRenderTargetView;
+}
+ID3D11DepthStencilView* GyuDon::depthStencilView(){
+	return m_pDepthStencilView;
 }
 
 float GyuDon::delta(){

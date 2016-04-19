@@ -17,9 +17,14 @@ class DebugDrawer :
 	ID3D11ShaderResourceView* m_pTexture = NULL;
 	ID3D11Buffer* m_pConstantBuffer = NULL;
 
+	//ブレンディングステート生成
+	ID3D11BlendState* m_hpBlendState = NULL;
+
 public:
 	DebugDrawer();
 	~DebugDrawer();
+
+	void Set(int fontWidth, int fontHeight);
 
 	void draw();
 };

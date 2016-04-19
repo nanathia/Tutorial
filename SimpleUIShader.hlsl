@@ -1,30 +1,39 @@
-cbuffer global{
-	float2 Pos;
-	float2 UV;
-	float4 Color;
+//グローバル
+cbuffer global
+{
+	float4x4 g_mWVP; //ワールドから射影までの変換行列
+	float4 g_Diffuse = float4(1, 1, 1, 1); //拡散反射(色）	
 };
 
-struct VS_OUTPUT{
+//構造体
+struct VS_OUTPUT
+{
 	float4 Pos : SV_POSITION;
 	float2 UV : TEXCOORD;
 };
 
-VS_OUTPUT VS(float2 Size : POSITION, float2 _UV : TEXCOORD){
-	VS_OUTPUT output;
-	output.Pos[0] = Pos[0] + Size[0];
-	output.Pos[1] = Pos[1] + Size[1];
-	output.Pos[2] = 0;
-	output.Pos[3] = 1;
-	output.UV[0] = UV[0] + _UV[0];
-	output.UV[1] = UV[1] + _UV[1];
+//
+//バーテックスシェーダー
+//
+VS_OUTPUT VS(float4 Pos : POSITION, float2 UV : TEXCOORD)
+{
+	VS_OUTPUT output = (VS_OUTPUT)0;
+
+	output.Pos = mul(Pos, g_mWVP);
+	output.UV = UV;
 
 	return output;
-};
+}
 
-SamplerState g_Sampler : register(s0);
+//
+//ピクセルシェーダー
+//
+
+SamplerState g_textureSampler : register(s0);
 Texture2D g_textureDecal : register(t0);
 
-float4 PS(VS_OUTPUT input) : SV_Target{
-	float4 ret = g_textureDecal.Sample(g_Sampler, UV) * Color;
-	return ret;
+float4 PS(VS_OUTPUT input) : SV_Target
+{
+	float4 ret = g_Diffuse * g_textureDecal.Sample(g_textureSampler, input.UV);
+	return ret/* * ret.a*/;
 }
