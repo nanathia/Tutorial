@@ -13,6 +13,7 @@
 #include "Ref.h"
 #ifdef TEST_SIZURU
 #include "DebugDrawer.h"
+#include "DebugMilliSecondLapper.h"
 #endif
 
 #pragma comment(lib,"winmm.lib")
@@ -93,8 +94,10 @@ private:
 
 #ifdef TEST_SIZURU
 	DebugDrawer* m_debugDraw = NULL;
+	DebugMilliSecondLapper* m_milliSecondLapper = NULL;
 public:
 	DebugDrawer* debugDrawer();
+	DebugMilliSecondLapper* milliSecondLapper();
 private:
 #endif
 };

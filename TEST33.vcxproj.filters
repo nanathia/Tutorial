@@ -70,6 +70,7 @@
     <ClInclude Include="DebugDrawer.h">
       <Filter>debug</Filter>
     </ClInclude>
+    <ClInclude Include="DebugMilliSecondLapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MAIN.cpp">
@@ -120,6 +121,7 @@
     <ClCompile Include="DebugDrawer.cpp">
       <Filter>debug</Filter>
     </ClCompile>
+    <ClCompile Include="DebugMilliSecondLapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="pmxVertex.hlsl">

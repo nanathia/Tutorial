@@ -224,6 +224,9 @@ void Oniko::draw(){
 		// 普通のテクスチャ
 		deviceContext->PSSetShaderResources(0, 1, &m_Daituuren_Toushin.m_pTexture);
 
+		float blendFactor[4] = { D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO };
+		deviceContext->OMSetBlendState(0, blendFactor, 0xffffffff);
+
 		// 刀身
 		{
 			// 2016-03-27 pmx 描画

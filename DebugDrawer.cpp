@@ -300,6 +300,13 @@ void DebugDrawer::draw(){
 		//}
 		int maxWidth = 0;
 		int maxHeight = 0;
+		for (auto it = m_drawStrings.begin(); it != m_drawStrings.end(); it++){
+			if (it->second.size()*m_fontWidth > maxWidth){
+				maxWidth = it->second.size()*m_fontWidth;
+			}
+		}
+		maxHeight = m_drawStrings.size() * m_fontHeight;
+
 		int currentY = 0;
 		int currentX = 0;
 		for (auto it = m_drawStrings.begin(); it != m_drawStrings.end(); it++){
@@ -356,13 +363,12 @@ void DebugDrawer::draw(){
 				}
 				deviceContext->DrawIndexed(6, (y*26+x) * 6, 0);
 
-
 				currentX += m_fontWidth;
 			}
 			currentY += m_fontHeight;
 		}
 		m_drawStrings.clear();
-		if(
+
 	}
 
 }

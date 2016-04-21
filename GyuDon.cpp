@@ -4,7 +4,8 @@
 #include "Director.h"
 #include "SceneBase.h"
 #include "SceneManager.h"
-
+#include "DebugMilliSecondLapper.h"
+#include <sstream>
 
 
 GyuDon::GyuDon()
@@ -95,6 +96,7 @@ void GyuDon::Loop()
 void GyuDon::App()
 {
 #ifdef TEST_SIZURU
+	m_milliSecondLapper->Start("AllProcess");
 	DWORD startTime = timeGetTime();
 	Director::instance()->scene()->update();
 	DWORD sceneUpdateTime = timeGetTime();
@@ -102,6 +104,34 @@ void GyuDon::App()
 	DWORD autoReleaseTime = timeGetTime();
 	Render();
 	DWORD renderTime = timeGetTime();
+	{
+		std::ostringstream oss;
+		oss << "SecneUpdate = " << sceneUpdateTime - startTime;
+		m_debugDraw->AddDebugString(oss.str(), 0);
+	}
+	{
+		std::ostringstream oss;
+		oss << "AutoRelease = " << autoReleaseTime - sceneUpdateTime;
+		m_debugDraw->AddDebugString(oss.str(), 0);
+	}
+	{
+#define frame 60
+		static DWORD pre[frame] = { 0 };
+		static int count = 0;
+		pre[count] = renderTime - autoReleaseTime;
+		std::ostringstream oss;
+		int all = 0;
+		for (int i = 0; i < frame; i++){
+			all += pre[i];
+		}
+		oss << "Render = " << all / frame;
+		m_debugDraw->AddDebugString(oss.str(), 0);
+		count++;
+		if (count > frame){
+			count = 0;
+		}
+#undef frame
+	}
 #else
 	Director::instance()->scene()->update();
 	Director::instance()->autoReleasePool()->update();
@@ -175,7 +205,8 @@ HRESULT GyuDon::InitD3D()
 
 #ifdef TEST_SIZURU
 	OBJECT_CREATE(m_debugDraw, new DebugDrawer);
-	m_debugDraw->Set(14, 28);
+	OBJECT_CREATE(m_milliSecondLapper, new DebugMilliSecondLapper());
+	m_debugDraw->Set(10, 20);
 #endif
 
 	return S_OK;
@@ -184,6 +215,7 @@ HRESULT GyuDon::InitD3D()
 void GyuDon::DestroyD3D()
 {
 #ifdef TEST_SIZURU
+	OBJECT_RELEASE(m_milliSecondLapper);
 	OBJECT_RELEASE(m_debugDraw);
 #endif
 	SAFE_RELEASE(m_pSwapChain);
@@ -216,6 +248,8 @@ void GyuDon::Render()
 	Director::instance()->scene()->draw();
 
 #ifdef TEST_SIZURU
+	m_milliSecondLapper->End("AllProcess");
+	m_milliSecondLapper->draw();
 	m_debugDraw->draw();
 #endif
 

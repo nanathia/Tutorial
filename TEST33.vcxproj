@@ -107,6 +107,7 @@
     <ClInclude Include="ApiMiku.h" />
     <ClInclude Include="AutoReleasePool.h" />
     <ClInclude Include="DebugDrawer.h" />
+    <ClInclude Include="DebugMilliSecondLapper.h" />
     <ClInclude Include="DEFINE.h" />
     <ClInclude Include="Director.h" />
     <ClInclude Include="Ground.h" />
@@ -137,6 +138,7 @@
     <ClCompile Include="ApiMiku.cpp" />
     <ClCompile Include="AutoReleasePool.cpp" />
     <ClCompile Include="DebugDrawer.cpp" />
+    <ClCompile Include="DebugMilliSecondLapper.cpp" />
     <ClCompile Include="DEFINE.cpp" />
     <ClCompile Include="Director.cpp" />
     <ClCompile Include="Ground.cpp" />
