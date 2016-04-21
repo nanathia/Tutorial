@@ -27,10 +27,14 @@ namespace unknown{
 #define NEW new( __FILE__, __LINE__ )
 #define OPERATOR_NEW( x ) operator new( ( x ), __FILE__, __LINE__ ) 
 #define ASSERT( exp ) ( ( !! ( exp ) ) || ( unknown::halt( __FILE__, __LINE__, #exp ), 0 ) )
+#define MEASURE_START( name ) Director::instance()->framework()->milliSecondLapper()->Start(name);
+#define MEASURE_END( name ) Director::instance()->framework()->milliSecondLapper()->End(name);
 #else //NDEBUG
 #define NEW new
 #define OPERATOR_NEW( x ) operator new( x ) 
 #define ASSERT( exp ) 
+#define MEASURE_START( name )
+#define MEASURE_END( name )
 #endif //NDEBUG
 
 // ワイド文字、マルチバイト文字の変換

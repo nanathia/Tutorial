@@ -95,48 +95,15 @@ void GyuDon::Loop()
 
 void GyuDon::App()
 {
-#ifdef TEST_SIZURU
-	m_milliSecondLapper->Start("AllProcess");
-	DWORD startTime = timeGetTime();
+	MEASURE_START("AllProcess");
+	MEASURE_START("SceneUpdate");
 	Director::instance()->scene()->update();
-	DWORD sceneUpdateTime = timeGetTime();
+	MEASURE_END("SceneUpdate");
+	MEASURE_START("AutoReleaseUpdate");
 	Director::instance()->autoReleasePool()->update();
-	DWORD autoReleaseTime = timeGetTime();
+	MEASURE_END("AutoReleaseUpdate");
+	MEASURE_START("Rendering");
 	Render();
-	DWORD renderTime = timeGetTime();
-	{
-		std::ostringstream oss;
-		oss << "SecneUpdate = " << sceneUpdateTime - startTime;
-		m_debugDraw->AddDebugString(oss.str(), 0);
-	}
-	{
-		std::ostringstream oss;
-		oss << "AutoRelease = " << autoReleaseTime - sceneUpdateTime;
-		m_debugDraw->AddDebugString(oss.str(), 0);
-	}
-	{
-#define frame 60
-		static DWORD pre[frame] = { 0 };
-		static int count = 0;
-		pre[count] = renderTime - autoReleaseTime;
-		std::ostringstream oss;
-		int all = 0;
-		for (int i = 0; i < frame; i++){
-			all += pre[i];
-		}
-		oss << "Render = " << all / frame;
-		m_debugDraw->AddDebugString(oss.str(), 0);
-		count++;
-		if (count > frame){
-			count = 0;
-		}
-#undef frame
-	}
-#else
-	Director::instance()->scene()->update();
-	Director::instance()->autoReleasePool()->update();
-	Render();
-#endif
 }
 
 HRESULT GyuDon::InitD3D()
@@ -247,8 +214,10 @@ void GyuDon::Render()
 
 	Director::instance()->scene()->draw();
 
+	MEASURE_END("Rendering");
+	MEASURE_END("AllProcess");
+
 #ifdef TEST_SIZURU
-	m_milliSecondLapper->End("AllProcess");
 	m_milliSecondLapper->draw();
 	m_debugDraw->draw();
 #endif
@@ -279,6 +248,9 @@ const D3DXVECTOR3& GyuDon::vUpVec(){
 }
 DebugDrawer* GyuDon::debugDrawer(){
 	return m_debugDraw;
+}
+DebugMilliSecondLapper* GyuDon::milliSecondLapper(){
+	return m_milliSecondLapper;
 }
 
 const D3DXVECTOR3& GyuDon::getDirectionLight(){

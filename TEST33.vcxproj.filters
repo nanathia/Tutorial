@@ -122,6 +122,9 @@
       <Filter>debug</Filter>
     </ClCompile>
     <ClCompile Include="DebugMilliSecondLapper.cpp" />
+    <ClCompile Include="BackBox.cpp">
+      <Filter>debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="pmxVertex.hlsl">
@@ -134,6 +137,9 @@
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="SimpleUIShader.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="blackBoxHarf.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

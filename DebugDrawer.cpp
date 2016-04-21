@@ -32,6 +32,8 @@ DebugDrawer::~DebugDrawer()
 	SAFE_RELEASE(m_pIndexBuffer);
 	SAFE_RELEASE(m_pVertexBuffer);
 	SAFE_RELEASE(m_pVertexLayout);
+
+	ReleaseBackBox();
 }
 
 void DebugDrawer::AddDebugString(const std::string& str, int order){
@@ -39,6 +41,8 @@ void DebugDrawer::AddDebugString(const std::string& str, int order){
 }
 
 void DebugDrawer::Set(int w, int h){
+
+	SetBackBox();
 
 	m_fontHeight = h;
 	m_fontWidth = w;
@@ -233,6 +237,8 @@ void DebugDrawer::Set(int w, int h){
 
 void DebugDrawer::draw(){
 
+	DrawBackBox();
+
 	ID3D11Device* device = Director::instance()->framework()->device();
 	ID3D11DeviceContext* deviceContext = Director::instance()->framework()->deviceContext();
 
@@ -298,14 +304,6 @@ void DebugDrawer::draw(){
 		//		deviceContext->DrawIndexed(6, (y*26+x) * 6, 0);
 		//	}
 		//}
-		int maxWidth = 0;
-		int maxHeight = 0;
-		for (auto it = m_drawStrings.begin(); it != m_drawStrings.end(); it++){
-			if (it->second.size()*m_fontWidth > maxWidth){
-				maxWidth = it->second.size()*m_fontWidth;
-			}
-		}
-		maxHeight = m_drawStrings.size() * m_fontHeight;
 
 		int currentY = 0;
 		int currentX = 0;
