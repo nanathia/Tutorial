@@ -10,7 +10,7 @@ Texture2D g_sphereDecal : register(t1);
 Texture2D g_toonDecal : register(t0);
 
 cbuffer global{
-	float3 ambient;
+	float3 ambient_;
 	float4 diffuse;
 	float3 specular;
 	float shininess;
@@ -75,9 +75,11 @@ float4 PS(VS_OUTPUT input) : SV_Target
 
 		float3 scatteredLight;
 
+		float ambient = ambient_*1.0;
+
 		if (intensity > 0.99) scatteredLight = ambient + (diffuse.rgb*lightColor*.8);
 		else if (intensity > 0.3) scatteredLight = ambient + (diffuse.rgb*lightColor * 0.75);
-		else scatteredLight = ambient + (diffuse.rgb *lightColor * 1.2);
+		else scatteredLight = ambient + (diffuse.rgb *lightColor * 1.0);
 
 		float specularWeight;
 		if (intensity == 0.0) //if surface is facing away from light

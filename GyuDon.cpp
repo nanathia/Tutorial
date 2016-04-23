@@ -205,7 +205,7 @@ void GyuDon::Render()
 	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-	m_vEyePt = D3DXVECTOR3(0.0f, 15.0f, -20.0f);
+	m_vEyePt = D3DXVECTOR3(0.0f, 55.0f, -60.0f);
 	m_vLookatPt = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 	m_vUpVec = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	D3DXMatrixLookAtLH(&m_viewMat, &m_vEyePt, &m_vLookatPt, &m_vUpVec);

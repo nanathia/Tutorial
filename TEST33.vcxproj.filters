@@ -17,14 +17,20 @@
     <Filter Include="shader">
       <UniqueIdentifier>{9adf31c7-affa-478f-a837-282a44075d3e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="oniko">
-      <UniqueIdentifier>{a2914aa7-2fca-4496-b211-82ad86d290c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="oniko\cpp">
-      <UniqueIdentifier>{3ceacb4c-9f67-4c96-80ee-b265d5f0d1d5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="debug">
       <UniqueIdentifier>{5e7d2964-ccac-4c1c-941b-e85d823970ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{6edd790c-29c6-410e-a374-4f07932fbaaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\oniko">
+      <UniqueIdentifier>{a2914aa7-2fca-4496-b211-82ad86d290c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\oniko\cpp">
+      <UniqueIdentifier>{3ceacb4c-9f67-4c96-80ee-b265d5f0d1d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\siba">
+      <UniqueIdentifier>{cec8bc0d-120d-438e-8d9e-76a38ae19856}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -64,13 +70,18 @@
     <ClInclude Include="MySTL.h" />
     <ClInclude Include="ModelDaiturenShoturen.h" />
     <ClInclude Include="Oniko.h">
-      <Filter>oniko</Filter>
+      <Filter>Objects\oniko</Filter>
     </ClInclude>
     <ClInclude Include="VMDMotion.h" />
     <ClInclude Include="DebugDrawer.h">
       <Filter>debug</Filter>
     </ClInclude>
-    <ClInclude Include="DebugMilliSecondLapper.h" />
+    <ClInclude Include="DebugMilliSecondLapper.h">
+      <Filter>debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Siba.h">
+      <Filter>Objects\siba</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MAIN.cpp">
@@ -101,19 +112,19 @@
     <ClCompile Include="NomalModel.cpp" />
     <ClCompile Include="ModelDaiturenShoturen.cpp" />
     <ClCompile Include="Oniko.cpp">
-      <Filter>oniko\cpp</Filter>
+      <Filter>Objects\oniko\cpp</Filter>
     </ClCompile>
     <ClCompile Include="OnikoBody.cpp">
-      <Filter>oniko\cpp</Filter>
+      <Filter>Objects\oniko\cpp</Filter>
     </ClCompile>
     <ClCompile Include="OnikoDaituuren.cpp">
-      <Filter>oniko\cpp</Filter>
+      <Filter>Objects\oniko\cpp</Filter>
     </ClCompile>
     <ClCompile Include="OnikoInit.cpp">
-      <Filter>oniko\cpp</Filter>
+      <Filter>Objects\oniko\cpp</Filter>
     </ClCompile>
     <ClCompile Include="OnikoDraw.cpp">
-      <Filter>oniko\cpp</Filter>
+      <Filter>Objects\oniko\cpp</Filter>
     </ClCompile>
     <ClCompile Include="VMDMotion.cpp" />
     <ClCompile Include="MyFUNCTION.h" />
@@ -121,9 +132,20 @@
     <ClCompile Include="DebugDrawer.cpp">
       <Filter>debug</Filter>
     </ClCompile>
-    <ClCompile Include="DebugMilliSecondLapper.cpp" />
     <ClCompile Include="BackBox.cpp">
       <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugMilliSecondLapper.cpp">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="SibaSet.cpp">
+      <Filter>Objects\siba</Filter>
+    </ClCompile>
+    <ClCompile Include="Siba.cpp">
+      <Filter>Objects\siba</Filter>
+    </ClCompile>
+    <ClCompile Include="SibaDraw.cpp">
+      <Filter>Objects\siba</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +163,9 @@
     </FxCompile>
     <FxCompile Include="blackBoxHarf.hlsl">
       <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="sibaShade.hlsl">
+      <Filter>Objects\siba</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
