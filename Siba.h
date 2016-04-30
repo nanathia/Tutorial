@@ -14,6 +14,8 @@ class Siba :
 	struct CONSTANT{
 		D3DXMATRIX mWVP;
 		D3DXMATRIX mW;
+		D3DXVECTOR3 vLight;
+		D3DXVECTOR3 vEye;
 	};
 	struct Vertex{
 		D3DXVECTOR4 Pos;
@@ -31,6 +33,9 @@ class Siba :
 		ID3D11SamplerState* m_pSamplerState = NULL;
 		ID3D11ShaderResourceView* m_pTexture = NULL;
 		ID3D11BlendState* m_pBlendState = NULL;
+		
+		ID3D11RenderTargetView* m_pBlerRenderTarget[2];
+		ID3D11ShaderResourceView* m_pBlerSurface[2];
 	};
 	Kusa m_kusa;
 

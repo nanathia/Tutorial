@@ -2,6 +2,7 @@
 #include "Director.h"
 #include "GyuDon.h"
 #include "INCLUDES.h"
+#include "MyFUNCTION.h"
 
 // ‚Æ‚è‚ ‘SLerp‚Å
 

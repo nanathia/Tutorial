@@ -93,8 +93,8 @@ class Oniko : public Ref
 	struct Daituuren_Toushin{
 		struct SimpleVertex{
 			D3DXVECTOR4 position;
-			D3DXVECTOR3 normal;
 			D3DXVECTOR2 uv;
+			D3DXVECTOR3 normal;
 		};
 		struct CONSTANT_BUFFER_TOUSHIN{
 			D3DXMATRIX g_mW;//ÉèÅ[ÉãÉhçsóÒ

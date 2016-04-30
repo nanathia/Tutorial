@@ -1,4 +1,6 @@
-#include "MyFUNCTION.h"
+#include <D3D11.h>
+#include <D3DX10.h>
+#include <D3DX11.h>
 #include <cmath>
 
 //void Bezier(D3DXVECTOR2* out, const D3DXVECTOR2& p0, const D3DXVECTOR2& p1, const D3DXVECTOR2& p2, const D3DXVECTOR2& p3, float t){

@@ -167,5 +167,8 @@
     <FxCompile Include="sibaShade.hlsl">
       <Filter>Objects\siba</Filter>
     </FxCompile>
+    <FxCompile Include="BlerX1.hlsl">
+      <Filter>Objects\siba</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

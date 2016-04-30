@@ -160,7 +160,7 @@ HRESULT GyuDon::InitD3D()
 	m_pDeviceContext->RSSetViewports(1, &vp);
 	D3D11_RASTERIZER_DESC rdc;
 	ZeroMemory(&rdc, sizeof(rdc));
-	rdc.CullMode = D3D11_CULL_BACK;
+	rdc.CullMode = D3D11_CULL_NONE;
 	rdc.FillMode = D3D11_FILL_SOLID;
 	ID3D11RasterizerState* pIr = NULL;
 	m_pDevice->CreateRasterizerState(&rdc, &pIr);
@@ -205,7 +205,7 @@ void GyuDon::Render()
 	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-	m_vEyePt = D3DXVECTOR3(0.0f, 55.0f, -60.0f);
+	m_vEyePt = D3DXVECTOR3(0.0f, 45.0f, -50.0f);
 	m_vLookatPt = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 	m_vUpVec = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	D3DXMatrixLookAtLH(&m_viewMat, &m_vEyePt, &m_vLookatPt, &m_vUpVec);

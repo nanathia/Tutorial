@@ -19,7 +19,7 @@ void Siba::Draw(){
 
 	//ブレンディングをコンテキストに設定
 	float blendFactor[4] = { D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO };
-	deviceContext->OMSetBlendState(m_kusa.m_pBlendState, blendFactor, 0xffffffff);
+	deviceContext->OMSetBlendState(0, blendFactor, 0xffffffff);
 
 	D3DXMATRIX projMat, viewMat;
 	projMat = Director::instance()->framework()->projMat();
@@ -36,26 +36,33 @@ void Siba::Draw(){
 		deviceContext->PSSetConstantBuffers(0, 1, &m_kusa.m_pConstantBuffer);
 
 		auto renderTarget = Director::instance()->framework()->renderTargetView();
-		deviceContext->OMSetRenderTargets(1, &renderTarget, 0);
+		ID3D11RenderTargetView* pRenderTargets[2] = { renderTarget, m_kusa.m_pBlerRenderTarget[0] };
+		deviceContext->OMSetRenderTargets(2, pRenderTargets, 0);
 
 		D3DXMATRIX wvp;
 		D3DXMATRIX world;
 		D3DXMATRIX trance, rota, scale;
 		D3DXMatrixTranslation(&trance, 0, 0, 0);
-		D3DXMatrixScaling(&scale, 1.f, 1.f, 1.f);
-		D3DXMatrixRotationAxis(&rota, &D3DXVECTOR3(1.f, 1.f, 1.f), 0.f);
-		wvp = world * projMat;
+		D3DXMatrixScaling(&scale, 10.f, 10.f, 10.f);
+		D3DXMatrixRotationAxis(&rota, &D3DXVECTOR3(1.f, 0.f, 0.f), float(timeGetTime())/1000.f);
+		world = scale * rota * trance;
+		wvp = world * viewMat * projMat;
 		D3DXMatrixTranspose(&world, &world);
+		D3DXMatrixTranspose(&wvp, &wvp);
 		D3D11_MAPPED_SUBRESOURCE pData;
 		CONSTANT cb;
 		if (SUCCEEDED(deviceContext->Map(m_kusa.m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData)))
 		{
-			cb.mWVP = world;
+			cb.mWVP = wvp;
+			cb.mW = world;
+			cb.vLight = Director::instance()->framework()->getDirectionLight();
+			cb.vEye = Director::instance()->framework()->vEyePt();
 
 			memcpy_s(pData.pData, pData.RowPitch, (void*)&cb, sizeof(CONSTANT));
 			deviceContext->Unmap(m_kusa.m_pConstantBuffer, 0);
 		}
 
+		deviceContext->DrawIndexed(6, 0, 0);
 	}
 
 }

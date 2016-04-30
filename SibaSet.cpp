@@ -11,7 +11,7 @@ void Siba::Set(){
 	ID3DBlob *pCompiledShader = NULL;
 	ID3DBlob *pErrors = NULL;
 
-	if (FAILED(D3DX11CompileFromFile("blackBoxHarf.hlsl", NULL, NULL, "VS", "vs_5_0", 0, 0, NULL, &pCompiledShader, &pErrors, NULL)))
+	if (FAILED(D3DX11CompileFromFile("sibaShade.hlsl", NULL, NULL, "VS", "vs_5_0", 0, 0, NULL, &pCompiledShader, &pErrors, NULL)))
 	{
 		MessageBox(0, "hlsl読み込み失敗", NULL, MB_OK);
 		HALT(h);
@@ -96,10 +96,20 @@ void Siba::Set(){
 
 	{
 		Vertex* vertices = new Vertex[4];
-		vertices[0].Pos = D3DXVECTOR4(0.f, 0.f, 0.f, 1.f);
-		vertices[1].Pos = D3DXVECTOR4(1, 0.f, 0.f, 1.f);
-		vertices[2].Pos = D3DXVECTOR4(0.f, 1, 0.f, 1.f);
-		vertices[3].Pos = D3DXVECTOR4(1, 1, 0.f, 1.f);
+		vertices[0].Pos = D3DXVECTOR4(-1.f, 0.f, 1.f, 1.f);
+		vertices[1].Pos = D3DXVECTOR4(1, 0.f, 1.f, 1.f);
+		vertices[2].Pos = D3DXVECTOR4(-1.f, 0.f, -1.f, 1.f);
+		vertices[3].Pos = D3DXVECTOR4(1.f, 0, -1.f, 1.f);
+		vertices[0].UV = D3DXVECTOR2(0.f, 0.f);
+		vertices[1].UV = D3DXVECTOR2(1.f, 0.f);
+		vertices[2].UV = D3DXVECTOR2(0.f, 1.f);
+		vertices[3].UV = D3DXVECTOR2(1.f, 1.f);
+		D3DXVECTOR4 normal;
+		D3DXVec4Cross(&normal, &vertices[0].Pos, &vertices[1].Pos, &vertices[2].Pos);
+		vertices[0].Normal = *reinterpret_cast<D3DXVECTOR3*>(&normal);
+		vertices[1].Normal = *reinterpret_cast<D3DXVECTOR3*>(&normal);
+		vertices[2].Normal = *reinterpret_cast<D3DXVECTOR3*>(&normal);
+		vertices[3].Normal = *reinterpret_cast<D3DXVECTOR3*>(&normal);
 
 		D3D11_BUFFER_DESC bd;
 		bd.Usage = D3D11_USAGE_DEFAULT;
@@ -145,6 +155,72 @@ void Siba::Set(){
 		}
 		delete[] indecies;
 
+	}
+
+	D3D11_BLEND_DESC BlendStateDesc;
+	BlendStateDesc.AlphaToCoverageEnable = FALSE;
+	BlendStateDesc.IndependentBlendEnable = FALSE;
+	for (int i = 0; i < 8; i++){
+		BlendStateDesc.RenderTarget[i].BlendEnable = TRUE;
+		BlendStateDesc.RenderTarget[i].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		BlendStateDesc.RenderTarget[i].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		BlendStateDesc.RenderTarget[i].BlendOp = D3D11_BLEND_OP_ADD;
+		BlendStateDesc.RenderTarget[i].SrcBlendAlpha = D3D11_BLEND_ONE;
+		BlendStateDesc.RenderTarget[i].DestBlendAlpha = D3D11_BLEND_ZERO;
+		BlendStateDesc.RenderTarget[i].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		BlendStateDesc.RenderTarget[i].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	}
+	device->CreateBlendState(&BlendStateDesc, &m_kusa.m_pBlendState);
+
+
+	// bler
+	for(int i = 0; i < 2; i++)
+	{
+		D3D11_TEXTURE2D_DESC desc;
+		memset(&desc, 0, sizeof(desc));
+		desc.Width = WINDOW_WIDTH;
+		desc.Height = WINDOW_HEIGHT;
+		desc.MipLevels = 1;
+		desc.ArraySize = 1;
+		// RGBA(255,255,255,255)タイプ
+		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		desc.SampleDesc.Count = 1;
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+		desc.CPUAccessFlags = 0;
+		desc.MiscFlags = 0;
+
+
+		ID3D11Texture2D* tex2D;   /// 2Ｄテクスチャ
+		HRESULT hr = device->CreateTexture2D(&desc, 0, &tex2D);
+		ASSERT(SUCCEEDED(hr));
+
+		// フォント情報をテクスチャに書き込む部分
+		//D3D11_MAPPED_SUBRESOURCE hMappedResource;
+		//hr = deviceContext->Map(
+		//	tex2D,
+		//	0,
+		//	D3D11_MAP_WRITE_DISCARD,
+		//	0,
+		//	&hMappedResource);
+		//if (FAILED(hr)){
+		//	HALT(h);
+		//}
+
+		// ShaderResourceViewの情報を作成する
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+		ZeroMemory(&srvDesc, sizeof(srvDesc));
+		srvDesc.Format = desc.Format;
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MostDetailedMip = 0;
+		srvDesc.Texture2D.MipLevels = desc.MipLevels;
+
+		// ShaderResourceViewを作成する
+		hr = device->CreateShaderResourceView(tex2D, &srvDesc, &m_kusa.m_pBlerSurface[i]);
+		ASSERT(SUCCEEDED(hr));
+		// RenderTargetView Create.
+		hr = device->CreateRenderTargetView(tex2D, NULL, &m_kusa.m_pBlerRenderTarget[i]);
+		ASSERT(SUCCEEDED(hr));
 	}
 }
 
