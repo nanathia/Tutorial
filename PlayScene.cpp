@@ -6,15 +6,15 @@
 
 PlayScene::PlayScene()
 {
-	//OBJECT_CREATE(m_oniko, new Oniko());
-	OBJECT_CREATE(m_siba, new Siba());
+	OBJECT_CREATE(m_oniko, new Oniko());
+	//OBJECT_CREATE(m_siba, new Siba());
 }
 
 
 PlayScene::~PlayScene()
 {
-	//OBJECT_RELEASE(m_oniko);
-	OBJECT_RELEASE(m_siba);
+	OBJECT_RELEASE(m_oniko);
+	//OBJECT_RELEASE(m_siba);
 }
 
 
@@ -27,6 +27,7 @@ void PlayScene::draw(){
 	auto f = Director::instance()->framework();
 	auto renderTarget = f->renderTargetView();
 	f->deviceContext()->OMSetRenderTargets(1, &renderTarget, f->depthStencilView());
-	//m_oniko->draw();
-	m_siba->Draw();
+
+	m_oniko->draw();
+	//m_siba->Draw();
 }

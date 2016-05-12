@@ -3,9 +3,12 @@
 #include "INCLUDES.h"
 #include "Director.h"
 #include "GyuDon.h"
+#include "DebugMilliSecondLapper.h"
 
 
 void Siba::Draw(){
+
+	MEASURE_START("SibaPoligon");
 
 	ID3D11Device* device = Director::instance()->framework()->device();
 	ID3D11DeviceContext* deviceContext = Director::instance()->framework()->deviceContext();
@@ -36,8 +39,11 @@ void Siba::Draw(){
 		deviceContext->PSSetConstantBuffers(0, 1, &m_kusa.m_pConstantBuffer);
 
 		auto renderTarget = Director::instance()->framework()->renderTargetView();
-		ID3D11RenderTargetView* pRenderTargets[2] = { renderTarget, m_kusa.m_pBlerRenderTarget[0] };
+		ID3D11RenderTargetView* pRenderTargets[2] = { renderTarget, m_bler.m_pRenderTarget[0] };
 		deviceContext->OMSetRenderTargets(2, pRenderTargets, 0);
+
+		const float ClearColor[4] = {0.f, 0.f, 0.f, 0.f};
+		deviceContext->ClearRenderTargetView(m_bler.m_pRenderTarget[0], ClearColor);
 
 		D3DXMATRIX wvp;
 		D3DXMATRIX world;
@@ -64,5 +70,11 @@ void Siba::Draw(){
 
 		deviceContext->DrawIndexed(6, 0, 0);
 	}
+
+	MEASURE_END("SibaPoligon");
+
+	MEASURE_START("SibaBler");
+	BlerDraw();
+	MEASURE_END("SibaBler");
 
 }

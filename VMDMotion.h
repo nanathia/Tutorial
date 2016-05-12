@@ -24,6 +24,9 @@ class VMDMotion :
 
 	std::map<std::string, std::map<int, vmd::VmdBoneFrame*/*キーフレーム*/>/*ボーン名*/> m_keyFrames;
 
+
+	void UpdateIK();		// IKボーン影響下ボーンの行列を更新
+
 public:
 	void SetSpeed(float speed);
 

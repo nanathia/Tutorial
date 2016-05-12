@@ -6,7 +6,9 @@
 #include "MTLFileModelMaterial.h"
 #include "MyVector.h"
 #include <vector>
+#include <D3D11.h>
 #include <D3DX10.h>
+#include <D3DX11.h>
 
 namespace obj{
 

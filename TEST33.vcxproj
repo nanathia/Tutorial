@@ -84,13 +84,13 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="BlerX1.hlsl">
+    <FxCompile Include="SibaBler.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="dat\shader\tuuren_toushin.hlsl">
+    <FxCompile Include="dat\shader\SimpleFong.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
@@ -109,6 +109,12 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="sibaShade.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Simple.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
@@ -144,18 +150,27 @@
     <ClInclude Include="OBJFileModelMesh.h" />
     <ClInclude Include="OBJModelFile.h" />
     <ClInclude Include="Oniko.h" />
+    <ClInclude Include="PixelShader.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="PMXModel.h" />
     <ClInclude Include="Ref.h" />
+    <ClInclude Include="RigitBody.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Siba.h" />
+    <ClInclude Include="Stage.h" />
     <ClInclude Include="TGATexture.h" />
     <ClInclude Include="VMDMotion.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApiMiku.cpp" />
     <ClCompile Include="AutoReleasePool.cpp" />
+    <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="RigitBody.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="SibaBlerDraw.cpp" />
+    <ClCompile Include="SibaBlerEnd.cpp" />
     <ClCompile Include="DebugDrawer.cpp" />
     <ClCompile Include="DebugMilliSecondLapper.cpp" />
     <ClCompile Include="DEFINE.cpp" />
@@ -166,7 +181,10 @@
     <ClCompile Include="MAIN.cpp" />
     <ClCompile Include="ModelDaiturenShoturen.cpp" />
     <ClCompile Include="MTLFileModelMaterial.cpp" />
-    <ClCompile Include="MyFUNCTION.cpp" />
+    <ClCompile Include="MyFUNCTION.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\func</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\func</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="MyFUNCTION.h" />
     <ClCompile Include="MyVector.cpp" />
     <ClCompile Include="NomalModel.cpp" />
@@ -185,8 +203,10 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="BackBox.cpp" />
     <ClCompile Include="Siba.cpp" />
+    <ClCompile Include="SibaBlerSet.cpp" />
     <ClCompile Include="SibaDraw.cpp" />
     <ClCompile Include="SibaSet.cpp" />
+    <ClCompile Include="Stage.cpp" />
     <ClCompile Include="TGATexture.cpp" />
     <ClCompile Include="VMDMotion.cpp" />
   </ItemGroup>

@@ -54,8 +54,8 @@ float4 PS(VS_OUTPUT input) : SV_Target
 	float4 NL = dot(Normal, LightDir);
 
 	float3 Reflect = normalize(NL * 2 * input.Normal  - LightDir); 
-	float4 specular = 2 * pow(saturate(dot(Reflect, ViewDir)), 4);
+	float4 specular = 2 * pow(saturate(dot(Reflect, ViewDir)), 8);
 
-	return /*0.5 * g_Diffuse*/ g_textureDecal.Sample(g_textureSampler, input.UV) + specular;
+	return /*0.5 * g_Diffuse*/ g_textureDecal.Sample(g_textureSampler, input.UV) * NL + specular + 0.3;
 	//return g_Diffuse;
 }

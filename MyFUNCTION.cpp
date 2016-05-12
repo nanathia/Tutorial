@@ -2,6 +2,7 @@
 #include <D3DX10.h>
 #include <D3DX11.h>
 #include <cmath>
+#include "MyFUNCTION.h"
 
 //void Bezier(D3DXVECTOR2* out, const D3DXVECTOR2& p0, const D3DXVECTOR2& p1, const D3DXVECTOR2& p2, const D3DXVECTOR2& p3, float t){
 //	//D3DXVECTOR3 p0(0.f, 0.f, 0.f);
@@ -14,12 +15,12 @@
 //	*out = p0*u3 + p1*(3 * u2*t) + p2*(3 * u*t2) + p3*t3;
 //}
 
-float Lerp(float p1, float p2, float t){
+float MyFunc::Lerp(float p1, float p2, float t){
 	return p1 + t * (p2 - p1);
 }
 
 //ベジェ曲線からWeightを算出
-float interpolateBezier(const D3DXVECTOR2& Interpolation1, const D3DXVECTOR2& Interpolation2, float frameInitilize){
+float MyFunc::interpolateBezier(const D3DXVECTOR2& Interpolation1, const D3DXVECTOR2& Interpolation2, float frameInitilize){
 	//ベジェ曲線指示点
 	float const x1 = Interpolation1[0] / 127.f;
 	float const y1 = Interpolation1[1] / 127.f;
@@ -45,7 +46,7 @@ float interpolateBezier(const D3DXVECTOR2& Interpolation1, const D3DXVECTOR2& In
 	return (3 * s*s*t*y1) + (3 * s*t*t*y2) + (t*t*t);
 }
 
-float Clamp(float x, float minval, float maxval)
+float MyFunc::Clamp(float x, float minval, float maxval)
 {
 	return min(max(minval, x), maxval);
 }

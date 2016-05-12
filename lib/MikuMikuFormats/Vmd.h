@@ -8,6 +8,7 @@
 #include <ostream>
 #include <D3D11.h>
 #include <D3DX10.h>
+#include <D3DX11.h>
 
 namespace vmd
 {

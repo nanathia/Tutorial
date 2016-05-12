@@ -60,7 +60,7 @@ void Oniko::Daituuren_Toushin::CreateToushinShader(){
 	ID3D11Device* device = Director::instance()->framework()->device();
 	ID3D11DeviceContext* deviceContext = Director::instance()->framework()->deviceContext();
 
-	if (FAILED(D3DX11CompileFromFile("dat/shader/tuuren_toushin.hlsl", NULL, NULL, "VS", "vs_5_0", 0, 0, NULL, &pCompiledShader, &pErrors, NULL)))
+	if (FAILED(D3DX11CompileFromFile("dat/shader/SimpleFong.hlsl", NULL, NULL, "VS", "vs_5_0", 0, 0, NULL, &pCompiledShader, &pErrors, NULL)))
 	{
 		MessageBox(0, "hlslì«Ç›çûÇ›é∏îs", NULL, MB_OK);
 		HALT(h);
@@ -88,7 +88,7 @@ void Oniko::Daituuren_Toushin::CreateToushinShader(){
 	}
 
 	pCompiledShader->Release();
-	if (FAILED(D3DX11CompileFromFile("dat/shader/tuuren_toushin.hlsl", NULL, NULL, "PS", "ps_5_0", 0, 0, NULL, &pCompiledShader, &pErrors, NULL)))
+	if (FAILED(D3DX11CompileFromFile("dat/shader/SimpleFong.hlsl", NULL, NULL, "PS", "ps_5_0", 0, 0, NULL, &pCompiledShader, &pErrors, NULL)))
 	{
 		MessageBox(0, "hlslì«Ç›çûÇ›é∏îs", NULL, MB_OK);
 		HALT(h);

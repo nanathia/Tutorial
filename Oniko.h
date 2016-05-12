@@ -1,4 +1,14 @@
 #pragma once
+
+
+#pragma comment(lib,"winmm.lib")
+#pragma comment(lib,"d3dx10.lib")
+#pragma comment(lib,"d3d11.lib")
+#pragma comment(lib,"d3dx11.lib")
+#pragma comment(lib,"d3dCompiler.lib")
+
+#include <D3DX11.h>
+
 #include "Ref.h"
 #include "PMXModel.h"
 #include "NomalModel.h"

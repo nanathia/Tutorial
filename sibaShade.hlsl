@@ -29,13 +29,12 @@ struct PS_OUTPUT{
 };
 
 PS_OUTPUT PS(VS_OUTPUT input){
-	
 	float3 vView = normalize(vEye - input.Pos);
 	float3 NL = normalize(dot(input.Normal, vLight));
 	float3 R = normalize(NL*2*input.Normal - vLight);
-	float spe = 2 * pow(saturate(dot(R, vView)), 6);
+	float spe = 2 * pow(saturate(dot(R, vView)), 4);
 	PS_OUTPUT output;
-	output.Target0 = g_textureDecal.Sample(g_textureSampler, input.UV) * float4(NL, 1) + spe;
+	output.Target0 = g_textureDecal.Sample(g_textureSampler, input.UV) * float4(NL, 0);
 	output.Target1 = spe;
 	return output;
 }

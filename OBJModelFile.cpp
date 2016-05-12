@@ -269,6 +269,35 @@ namespace obj{
 				destIndexBuf.push_back(vertexCountAll + 3);
 				vertexCountAll += 4;
 			}
+			else if (vertexSize == 6){
+				// 5面なら９インデクス
+				destIndexBuf.push_back(vertexCountAll);
+				destIndexBuf.push_back(vertexCountAll + 1);
+				destIndexBuf.push_back(vertexCountAll + 2);
+				destIndexBuf.push_back(vertexCountAll + 0);
+				destIndexBuf.push_back(vertexCountAll + 2);
+				destIndexBuf.push_back(vertexCountAll + 3);
+				destIndexBuf.push_back(vertexCountAll + 0);
+				destIndexBuf.push_back(vertexCountAll + 3);
+				destIndexBuf.push_back(vertexCountAll + 4);
+				vertexCountAll += 5;
+			}
+			else if (vertexSize == 5){
+				// 6面なら12インデクス
+				destIndexBuf.push_back(vertexCountAll);
+				destIndexBuf.push_back(vertexCountAll + 1);
+				destIndexBuf.push_back(vertexCountAll + 2);
+				destIndexBuf.push_back(vertexCountAll + 0);
+				destIndexBuf.push_back(vertexCountAll + 2);
+				destIndexBuf.push_back(vertexCountAll + 3);
+				destIndexBuf.push_back(vertexCountAll + 0);
+				destIndexBuf.push_back(vertexCountAll + 3);
+				destIndexBuf.push_back(vertexCountAll + 4);
+				destIndexBuf.push_back(vertexCountAll + 0);
+				destIndexBuf.push_back(vertexCountAll + 4);
+				destIndexBuf.push_back(vertexCountAll + 5);
+				vertexCountAll += 6;
+			}
 			else{
 				HALT(未対応の頂点数);
 			}
@@ -322,6 +351,22 @@ namespace obj{
 					// プログラムが通った頂点、インデクスの合計を加算
 					runedVertexNum += 4;
 					runedIndexNum += 6;
+				}
+				else if (count == 5){
+					// 五角形です。
+					dataIndexList.push_back(std::vector<Vec3I>());
+					dataIndexList.back().resize(5);
+					// プログラムが通った頂点、インデクスの合計を加算
+					runedVertexNum += 5;
+					runedIndexNum += 9;
+				}
+				else if (count == 6){
+					// 六角形です。
+					dataIndexList.push_back(std::vector<Vec3I>());
+					dataIndexList.back().resize(6);
+					// プログラムが通った頂点、インデクスの合計を加算
+					runedVertexNum += 6;
+					runedIndexNum += 12;
 				}
 				else{
 					HALT(未対応の形です);
@@ -841,6 +886,16 @@ namespace obj{
 					// 四角形です。
 					vertBuf += 4;
 					indexBuf += 6;
+				}
+				else if (count == 5){
+					// 五角形です。
+					vertBuf += 5;
+					indexBuf += 9;
+				}
+				else if (count == 6){
+					// 六角形です。
+					vertBuf += 6;
+					indexBuf += 12;
 				}
 				else{
 					HALT(未対応の形です);

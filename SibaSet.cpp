@@ -172,55 +172,6 @@ void Siba::Set(){
 	}
 	device->CreateBlendState(&BlendStateDesc, &m_kusa.m_pBlendState);
 
-
-	// bler
-	for(int i = 0; i < 2; i++)
-	{
-		D3D11_TEXTURE2D_DESC desc;
-		memset(&desc, 0, sizeof(desc));
-		desc.Width = WINDOW_WIDTH;
-		desc.Height = WINDOW_HEIGHT;
-		desc.MipLevels = 1;
-		desc.ArraySize = 1;
-		// RGBA(255,255,255,255)タイプ
-		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		desc.SampleDesc.Count = 1;
-		desc.Usage = D3D11_USAGE_DEFAULT;
-		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-		desc.CPUAccessFlags = 0;
-		desc.MiscFlags = 0;
-
-
-		ID3D11Texture2D* tex2D;   /// 2Ｄテクスチャ
-		HRESULT hr = device->CreateTexture2D(&desc, 0, &tex2D);
-		ASSERT(SUCCEEDED(hr));
-
-		// フォント情報をテクスチャに書き込む部分
-		//D3D11_MAPPED_SUBRESOURCE hMappedResource;
-		//hr = deviceContext->Map(
-		//	tex2D,
-		//	0,
-		//	D3D11_MAP_WRITE_DISCARD,
-		//	0,
-		//	&hMappedResource);
-		//if (FAILED(hr)){
-		//	HALT(h);
-		//}
-
-		// ShaderResourceViewの情報を作成する
-		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-		ZeroMemory(&srvDesc, sizeof(srvDesc));
-		srvDesc.Format = desc.Format;
-		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MostDetailedMip = 0;
-		srvDesc.Texture2D.MipLevels = desc.MipLevels;
-
-		// ShaderResourceViewを作成する
-		hr = device->CreateShaderResourceView(tex2D, &srvDesc, &m_kusa.m_pBlerSurface[i]);
-		ASSERT(SUCCEEDED(hr));
-		// RenderTargetView Create.
-		hr = device->CreateRenderTargetView(tex2D, NULL, &m_kusa.m_pBlerRenderTarget[i]);
-		ASSERT(SUCCEEDED(hr));
-	}
+	BlerSet();
 }
 

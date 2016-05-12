@@ -160,14 +160,14 @@ HRESULT GyuDon::InitD3D()
 	m_pDeviceContext->RSSetViewports(1, &vp);
 	D3D11_RASTERIZER_DESC rdc;
 	ZeroMemory(&rdc, sizeof(rdc));
-	rdc.CullMode = D3D11_CULL_NONE;
+	rdc.CullMode = D3D11_CULL_BACK;
 	rdc.FillMode = D3D11_FILL_SOLID;
 	ID3D11RasterizerState* pIr = NULL;
 	m_pDevice->CreateRasterizerState(&rdc, &pIr);
 	m_pDeviceContext->RSSetState(pIr);
 	SAFE_RELEASE(pIr);
 
-	m_DirectionLight = D3DXVECTOR3(0, -0.5, 0.5);
+	m_DirectionLight = D3DXVECTOR3(1, -1, 1);
 	D3DXVec3Normalize(&m_DirectionLight, &m_DirectionLight);
 
 #ifdef TEST_SIZURU

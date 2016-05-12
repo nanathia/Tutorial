@@ -32,6 +32,9 @@
     <Filter Include="Objects\siba">
       <UniqueIdentifier>{cec8bc0d-120d-438e-8d9e-76a38ae19856}</UniqueIdentifier>
     </Filter>
+    <Filter Include="stage">
+      <UniqueIdentifier>{d394508b-5124-4670-91cc-1373def2b659}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\MikuMikuFormats\EncodingHelper.h">
@@ -82,6 +85,12 @@
     <ClInclude Include="Siba.h">
       <Filter>Objects\siba</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="PixelShader.h" />
+    <ClInclude Include="Stage.h">
+      <Filter>stage</Filter>
+    </ClInclude>
+    <ClInclude Include="RigitBody.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MAIN.cpp">
@@ -147,15 +156,27 @@
     <ClCompile Include="SibaDraw.cpp">
       <Filter>Objects\siba</Filter>
     </ClCompile>
+    <ClCompile Include="SibaBlerSet.cpp">
+      <Filter>Objects\siba</Filter>
+    </ClCompile>
+    <ClCompile Include="SibaBlerEnd.cpp">
+      <Filter>Objects\siba</Filter>
+    </ClCompile>
+    <ClCompile Include="SibaBlerDraw.cpp">
+      <Filter>Objects\siba</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="Stage.cpp">
+      <Filter>stage</Filter>
+    </ClCompile>
+    <ClCompile Include="RigitBody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="pmxVertex.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="pmxPixel.hlsl">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="dat\shader\tuuren_toushin.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="SimpleUIShader.hlsl">
@@ -167,8 +188,14 @@
     <FxCompile Include="sibaShade.hlsl">
       <Filter>Objects\siba</Filter>
     </FxCompile>
-    <FxCompile Include="BlerX1.hlsl">
+    <FxCompile Include="SibaBler.hlsl">
       <Filter>Objects\siba</Filter>
+    </FxCompile>
+    <FxCompile Include="Simple.hlsl">
+      <Filter>Objects\siba</Filter>
+    </FxCompile>
+    <FxCompile Include="dat\shader\SimpleFong.hlsl">
+      <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

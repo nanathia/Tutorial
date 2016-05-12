@@ -39,6 +39,66 @@ void VMDMotion::update(){
 	}
 }
 
+
+void VMDMotion::UpdateIK() {
+	//D3DXVECTOR3 localEffectorPos, localTargetPos;
+	//for (unsigned int j = 0; j < ikData.iterations; ++j) {
+	//	for (unsigned int i = 0; i < ikData.ik_child_bone_index.size(); ++i) {
+	//		unsigned short attentionIdx = ikData.ik_child_bone_index[i];
+	//		D3DXVECTOR3 effectorPos((*bones)[ikData.ik_target_bone_index].CalBoneMatML().m[3]);	// エフェクタ(ターゲットボーン)の位置
+	//		D3DXVECTOR3 targetPos((*bones)[ikData.ik_bone_index].CalBoneMatML().m[3]);			// ターゲット(IKボーン)の位置
+	//		D3DXMATRIX invCoord;																	// 注目ボーンのボーン行列の逆行列
+	//		D3DXMatrixInverse(&invCoord, 0, &(*bones)[attentionIdx].CalBoneMatML());
+	//		D3DXVec3TransformCoord(&localEffectorPos, &effectorPos, &invCoord);						// 注目ボーン基準に変換
+	//		D3DXVec3TransformCoord(&localTargetPos, &targetPos, &invCoord);							// 注目ボーン基準に変換
+	//		D3DXVECTOR3 localEffectorDir;															// エフェクタのローカル方向（注目ボーン基準）
+	//		D3DXVec3Normalize(&localEffectorDir, &localEffectorPos);
+	//		D3DXVECTOR3 localTargetDir;																// ターゲットのローカル方向（注目ボーン基準）
+	//		D3DXVec3Normalize(&localTargetDir, &localTargetPos);
+	//		if ((*bones)[attentionIdx].name.find("ひざ") != string::npos) {
+	//			localEffectorDir = D3DXVECTOR3(0, localEffectorDir.y, localEffectorDir.z);
+	//			D3DXVec3Normalize(&localEffectorDir, &localEffectorDir);
+	//			localTargetDir = D3DXVECTOR3(0, localTargetDir.y, localTargetDir.z);
+	//			D3DXVec3Normalize(&localTargetDir, &localTargetDir);
+	//		}
+	//		float p = D3DXVec3Dot(&localEffectorDir, &localTargetDir);
+	//		if (p > 1 - 1.0e-8f) continue;	// 計算誤差により1を越えるとacos()が発散するので注意!
+	//		float angle = acos(p);
+	//		if (angle > 4 * ikData.control_weight) angle = 4.0f*ikData.control_weight;
+	//		D3DXVECTOR3 axis;
+	//		D3DXVec3Cross(&axis, &localEffectorDir, &localTargetDir);
+	//		D3DXMATRIX rotation;
+	//		D3DXMatrixRotationAxis(&rotation, &axis, angle);
+	//		if ((*bones)[attentionIdx].name.find("ひざ") != string::npos) {
+	//			D3DXMATRIX inv;
+	//			D3DXMatrixInverse(&inv, 0, &(*bones)[attentionIdx].initMatBL);
+	//			D3DXMATRIX def = rotation*(*bones)[attentionIdx].boneMatBL*inv;
+	//			D3DXVECTOR3 t(0, 0, 1);
+	//			D3DXVec3TransformCoord(&t, &t, &def);
+	//			if (t.y < 0) D3DXMatrixRotationAxis(&rotation, &axis, -angle);
+	//			// 膝ボーンがエフェクタ(ターゲットボーン)より近い時は回転量を追加する
+	//			float l = D3DXVec3Length(&localTargetPos) / D3DXVec3Length(&localEffectorPos);
+	//			if (fabs(angle) <= D3DX_PI / 2 && l < 1.0f) {
+	//				static const float a = 0.5f;	// 追加量の比例係数
+	//				float diff = acosf(l)*a;		// 追加量
+	//				static const float diff_limit = D3DX_PI / 6;	// 追加量の制限
+	//				if (diff > diff_limit) {
+	//					diff = diff_limit;
+	//				}
+	//				if (fabs(angle) > 1.0e-6f) diff *= angle / fabs(angle);	// 符号合わせ
+	//				angle += diff;
+	//			}
+	//		}
+	//		(*bones)[attentionIdx].boneMatBL = rotation*(*bones)[attentionIdx].boneMatBL;
+	//	}
+	//	const float errToleranceSq = 0.000001f;
+	//	if (D3DXVec3LengthSq(&(localEffectorPos - localTargetPos)) < errToleranceSq) {
+	//		return;
+	//	}
+	//}
+}
+
+
 void VMDMotion::RenderFrameBone(const std::string& boneName, D3DXMATRIX* out){
 	if (m_keyFrames[boneName].size() == 0){
 		D3DXMatrixIdentity(out);
@@ -97,9 +157,9 @@ void VMDMotion::RenderFrameBone(const std::string& boneName, D3DXMATRIX* out){
 	}
 
 	//D3DXVec3Lerp(&pos, reinterpret_cast<D3DXVECTOR3*>(_1->position), reinterpret_cast<D3DXVECTOR3*>(_2->position), ratio);
-	pos.x = Lerp(_1->position[0], _2->position[0], ratioX);
-	pos.y = Lerp(_1->position[1], _2->position[1], ratioY);
-	pos.z = Lerp(_1->position[2], _2->position[2], ratioZ);
+	pos.x = MyFunc::Lerp(_1->position[0], _2->position[0], ratioX);
+	pos.y = MyFunc::Lerp(_1->position[1], _2->position[1], ratioY);
+	pos.z = MyFunc::Lerp(_1->position[2], _2->position[2], ratioZ);
 	D3DXQuaternionSlerp(&rota, reinterpret_cast<D3DXQUATERNION*>(_1->orientation), reinterpret_cast<D3DXQUATERNION*>(_2->orientation), ratioR);
 	D3DXMATRIX rotaM;
 	D3DXMatrixRotationQuaternion(&rotaM, &rota);
