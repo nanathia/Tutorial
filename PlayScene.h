@@ -2,18 +2,20 @@
 #include "SceneBase.h"
 
 
-class Oniko;
+class PMXModel;
 class Siba;
+class OBJModel;
 
 class PlayScene :
 	public SceneBase
 {
-	Oniko* m_oniko = NULL;
+	PMXModel* m_oniko = NULL;
+	OBJModel* m_skyDome = NULL;
 	Siba* m_siba = NULL;
 
 public:
 	PlayScene();
-	~PlayScene();
+	virtual ~PlayScene();
 
 	void update();
 	void draw();

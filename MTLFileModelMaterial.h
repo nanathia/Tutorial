@@ -33,7 +33,7 @@ namespace obj{
 		// テクスチャ名の設定
 		void setTextureName(const std::string& name);
 		// テクスチャの取得
-		const std::string& getTextureName();
+		const std::string& getTextureName() const;
 
 		// 名前の設定と取得
 		const std::string& getName() const;

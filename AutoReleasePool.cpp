@@ -10,7 +10,7 @@ AutoReleasePool::AutoReleasePool()
 
 AutoReleasePool::~AutoReleasePool()
 {
-	for (int i = 0; i < 100; i++){
+	for (int i = 0; i < 1000; i++){
 		// 1000‰ñŽŽs‚·‚éB
 		auto it = m_objectList.begin();
 		while (it != m_objectList.end())

@@ -49,7 +49,7 @@ namespace obj{
 	}
 
 	// テクスチャの取得
-	const std::string& MTLFileModelMaterial::getTextureName(){
+	const std::string& MTLFileModelMaterial::getTextureName() const{
 		return m_textureName;
 	}
 

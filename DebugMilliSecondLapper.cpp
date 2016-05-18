@@ -4,6 +4,8 @@
 #include "DebugDrawer.h"
 #include "GyuDon.h"
 #include <sstream>
+#include <crtdbg.h>
+#define new ::new(_NORMAL_BLOCK, __FILE__, __LINE__)
 
 
 DebugMilliSecondLapper::DebugMilliSecondLapper()
@@ -13,6 +15,9 @@ DebugMilliSecondLapper::DebugMilliSecondLapper()
 
 DebugMilliSecondLapper::~DebugMilliSecondLapper()
 {
+	for (auto it = m_nameList.begin(); it != m_nameList.end(); it++){
+		SAFE_DELETE(it->second);
+	}
 }
 
 

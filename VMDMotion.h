@@ -1,14 +1,12 @@
 #pragma once
 #include "Ref.h"
 #include "lib/MikuMikuFormats/Vmd.h"
+#include "PMXModel.h"
 #include <D3D11.h>
 #include <D3DX10.h>
 #include <vector>
 #include <map>
 
-namespace pmx{
-	class PmxBone;
-}
 
 class VMDMotion :
 	public Ref
@@ -27,11 +25,13 @@ class VMDMotion :
 
 	void UpdateIK();		// IKボーン影響下ボーンの行列を更新
 
+
 public:
 	void SetSpeed(float speed);
 
 	// 
 	void update();
+	void BoneRendering(PmxBone* bones, std::unique_ptr<pmx::PmxBone[]>& boneData, int boneCount);
 	// 特定フレームでの指定ボーンの差分を書き出し。
 	void RenderFrameBone(const std::string& boneName, D3DXMATRIX* out);
 

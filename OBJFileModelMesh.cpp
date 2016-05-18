@@ -47,7 +47,7 @@ namespace obj{
 	void OBJFileModelMesh::setMaterial(MTLFileModelMaterial* material){
 		m_material = material;
 	}
-	MTLFileModelMaterial* OBJFileModelMesh::getMaterial(){
+	MTLFileModelMaterial* OBJFileModelMesh::getMaterial() const{
 		return m_material;
 	}
 

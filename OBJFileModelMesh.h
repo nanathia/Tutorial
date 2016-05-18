@@ -36,7 +36,7 @@ namespace obj{
 		const std::string& getMaterialName() const;
 
 		void setMaterial(MTLFileModelMaterial* material);
-		MTLFileModelMaterial* getMaterial();
+		MTLFileModelMaterial* getMaterial() const;
 
 		OBJFileModelMesh();
 		~OBJFileModelMesh();

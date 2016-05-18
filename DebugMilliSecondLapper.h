@@ -36,6 +36,6 @@ public:
 	void draw(); // frame end draw
 
 	DebugMilliSecondLapper();
-	~DebugMilliSecondLapper();
+	virtual ~DebugMilliSecondLapper();
 };
 

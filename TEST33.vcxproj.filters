@@ -91,6 +91,11 @@
       <Filter>stage</Filter>
     </ClInclude>
     <ClInclude Include="RigitBody.h" />
+    <ClInclude Include="OBJModel.h" />
+    <ClInclude Include="EngineGUI.h" />
+    <ClInclude Include="GUIWindow.h" />
+    <ClInclude Include="UINode.h" />
+    <ClInclude Include="UIDrawSetter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MAIN.cpp">
@@ -171,6 +176,11 @@
       <Filter>stage</Filter>
     </ClCompile>
     <ClCompile Include="RigitBody.cpp" />
+    <ClCompile Include="OBJModel.cpp" />
+    <ClCompile Include="EngineGUI.cpp" />
+    <ClCompile Include="GUIWindow.cpp" />
+    <ClCompile Include="UINode.cpp" />
+    <ClCompile Include="UIDrawSetter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="pmxVertex.hlsl">

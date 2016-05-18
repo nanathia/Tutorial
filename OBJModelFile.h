@@ -96,7 +96,8 @@ namespace obj{
 		const std::vector<unsigned>& getVertexIndex();
 		const std::vector<Vec3>& getNormal();
 		const std::vector<Vec2>& getUV();
-		const std::vector<std::string> getTextureName();
+		const std::vector<std::string>& getTextureName();
+		const std::vector<OBJFileModelMesh>& getMeshList();
 
 		int vertexSize();
 		int vertexIndexSize();

@@ -278,6 +278,7 @@ namespace pmx
 		/// Å¬§ŒÀŠp“x
 		float min_radian[3];
 		void Read(std::istream *stream, PmxSetting *settingn);
+
 	};
 
 	/// ƒ{[ƒ“

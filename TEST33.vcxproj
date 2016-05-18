@@ -134,7 +134,9 @@
     <ClInclude Include="DebugMilliSecondLapper.h" />
     <ClInclude Include="DEFINE.h" />
     <ClInclude Include="Director.h" />
+    <ClInclude Include="EngineGUI.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="GUIWindow.h" />
     <ClInclude Include="GyuDon.h" />
     <ClInclude Include="INCLUDES.h" />
     <ClInclude Include="lib\MikuMikuFormats\EncodingHelper.h" />
@@ -148,6 +150,7 @@
     <ClInclude Include="NomalModel.h" />
     <ClInclude Include="OBJFileModelGroup.h" />
     <ClInclude Include="OBJFileModelMesh.h" />
+    <ClInclude Include="OBJModel.h" />
     <ClInclude Include="OBJModelFile.h" />
     <ClInclude Include="Oniko.h" />
     <ClInclude Include="PixelShader.h" />
@@ -161,11 +164,16 @@
     <ClInclude Include="Siba.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="TGATexture.h" />
+    <ClInclude Include="UIDrawSetter.h" />
+    <ClInclude Include="UINode.h" />
     <ClInclude Include="VMDMotion.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApiMiku.cpp" />
     <ClCompile Include="AutoReleasePool.cpp" />
+    <ClCompile Include="EngineGUI.cpp" />
+    <ClCompile Include="GUIWindow.cpp" />
+    <ClCompile Include="OBJModel.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="RigitBody.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
@@ -180,7 +188,10 @@
     <ClCompile Include="lib\MikuMikuFormats\Pmx.cpp" />
     <ClCompile Include="MAIN.cpp" />
     <ClCompile Include="ModelDaiturenShoturen.cpp" />
-    <ClCompile Include="MTLFileModelMaterial.cpp" />
+    <ClCompile Include="MTLFileModelMaterial.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\mtl</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\mtl</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="MyFUNCTION.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\func</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\func</ObjectFileName>
@@ -208,6 +219,8 @@
     <ClCompile Include="SibaSet.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="TGATexture.cpp" />
+    <ClCompile Include="UIDrawSetter.cpp" />
+    <ClCompile Include="UINode.cpp" />
     <ClCompile Include="VMDMotion.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -972,11 +972,15 @@ namespace obj{
 	}
 
 
-	const std::vector<std::string> OBJModelFile::getTextureName(){
+	const std::vector<std::string>& OBJModelFile::getTextureName(){
 		return m_textureNameList;
 	}
 	int OBJModelFile::getTextureCount(){
 		return m_textureNameList.size();
+	}
+
+	const std::vector<OBJFileModelMesh>& OBJModelFile::getMeshList(){
+		return m_meshList;
 	}
 
 }
