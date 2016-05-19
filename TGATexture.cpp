@@ -1,5 +1,6 @@
 #include "TGATexture.h"
 #include <fstream>
+#include "INCLUDES.h"
 using namespace std;
 
 TGA::TGA(const char* file){
@@ -26,24 +27,39 @@ TGA::TGA(const char* file){
 		int rect = m_width * m_height;
 
 		if (colorDepth == 32){
-			for (int i = 0; i < rect; i++){
-				unsigned char* temp = reinterpret_cast<unsigned char*>(&m_data[i]);
-				temp[2] = binary[index++];
-				temp[1] = binary[index++];
-				temp[0] = binary[index++];
-				temp[3] = binary[index++];
+			// 色深度32ビット（透明度付き）
+			for (int y = 0; y < m_height; y++){
+				int y_reverse = m_height - y - 1;
+				for (int x = 0; x < m_width; x++){
+					// GL仕様で上下が逆転しているため、調整しています。
+					int index = y_reverse * m_width + x;
+					unsigned char* temp = reinterpret_cast<unsigned char*>(&m_data[index]);
+					temp[2] = binary[index++];
+					temp[1] = binary[index++];
+					temp[0] = binary[index++];
+					temp[3] = binary[index++];
+				}
 			}
 		}
 		else if (colorDepth == 24){
-			for (int i = 0; i < rect; i++){
-				unsigned char* temp = reinterpret_cast<unsigned char*>(&m_data[i]);
-				temp[2] = binary[index++];
-				temp[1] = binary[index++];
-				temp[0] = binary[index++];
-				temp[3] = 0x00;
+			// 色深度24ビット（透明度なし）
+			for (int y = 0; y < m_height; y++){
+				int y_reverse = m_height - y - 1;
+				for (int x = 0; x < m_width; x++){
+					// GL仕様で上下が逆転しているため、調整しています。
+					int index = y_reverse * m_width + x;
+					unsigned char* temp = reinterpret_cast<unsigned char*>(&m_data[index]);
+					temp[2] = binary[index++];
+					temp[1] = binary[index++];
+					temp[0] = binary[index++];
+					temp[3] = 0xff;
+				}
 			}
 		}
 		delete[] binary;
+	}
+	else{
+		HALT(TGAファイルを読めませんでした。);
 	}
 }
 

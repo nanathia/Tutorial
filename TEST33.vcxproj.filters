@@ -96,6 +96,8 @@
     <ClInclude Include="GUIWindow.h" />
     <ClInclude Include="UINode.h" />
     <ClInclude Include="UIDrawSetter.h" />
+    <ClInclude Include="MyTexture.h" />
+    <ClInclude Include="TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MAIN.cpp">
@@ -181,6 +183,8 @@
     <ClCompile Include="GUIWindow.cpp" />
     <ClCompile Include="UINode.cpp" />
     <ClCompile Include="UIDrawSetter.cpp" />
+    <ClCompile Include="MyTexture.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="pmxVertex.hlsl">

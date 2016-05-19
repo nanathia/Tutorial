@@ -146,6 +146,7 @@
     <ClInclude Include="ModelDaiturenShoturen.h" />
     <ClInclude Include="MTLFileModelMaterial.h" />
     <ClInclude Include="MySTL.h" />
+    <ClInclude Include="MyTexture.h" />
     <ClInclude Include="MyVector.h" />
     <ClInclude Include="NomalModel.h" />
     <ClInclude Include="OBJFileModelGroup.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Siba.h" />
     <ClInclude Include="Stage.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TGATexture.h" />
     <ClInclude Include="UIDrawSetter.h" />
     <ClInclude Include="UINode.h" />
@@ -173,6 +175,7 @@
     <ClCompile Include="AutoReleasePool.cpp" />
     <ClCompile Include="EngineGUI.cpp" />
     <ClCompile Include="GUIWindow.cpp" />
+    <ClCompile Include="MyTexture.cpp" />
     <ClCompile Include="OBJModel.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="RigitBody.cpp" />
@@ -218,6 +221,7 @@
     <ClCompile Include="SibaDraw.cpp" />
     <ClCompile Include="SibaSet.cpp" />
     <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TGATexture.cpp" />
     <ClCompile Include="UIDrawSetter.cpp" />
     <ClCompile Include="UINode.cpp" />
